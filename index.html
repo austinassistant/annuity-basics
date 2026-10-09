@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3a8a">
+<title>Annuity Basics: insurance and annuities from zero</title>
+<style>
+:root{
+  --bg:#f5f6f8; --card:#ffffff; --ink:#141b2d; --muted:#555e70; --line:#e2e5eb;
+  --accent:#2448c9; --accent-soft:#e8edfc; --accent-ink:#ffffff;
+  --good:#146c3f; --good-bg:#e5f5ec; --bad:#a61b12; --bad-bg:#fcebe9;
+  --gold:#b07800; --gold-bg:#fff4d6; --shadow:0 1px 2px rgba(20,27,45,.06),0 4px 16px rgba(20,27,45,.06);
+  --radius:14px; --navh:64px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f1420;--card:#171e2e;--ink:#e8ebf2;--muted:#a3abbd;--line:#2a3347;--accent:#7f9cff;--accent-soft:#1f2a4a;--accent-ink:#0f1420;
+  --good:#5fd39a;--good-bg:#12301f;--bad:#ff8a80;--bad-bg:#3a1714;--gold:#f2c14e;--gold-bg:#3a2e0e;--shadow:0 1px 2px rgba(0,0,0,.3)}
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom))}
+a{color:var(--accent)}
+h1,h2,h3{line-height:1.25;margin:0 0 .5em}
+h1{font-size:1.6rem;letter-spacing:-.01em}
+h2{font-size:1.3rem;letter-spacing:-.01em}
+h3{font-size:1.05rem}
+p{margin:0 0 .8em}
+button{font:inherit;color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px}
+.brand{font-weight:700;font-size:1.05rem;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px;margin-right:auto}
+.brand .logo{width:28px;height:28px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.9rem;font-weight:800}
+.chips{display:flex;gap:6px}
+.chip{font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.chip.xp{color:var(--accent)} .chip.fire{color:var(--gold)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav.tabs a{flex:1;text-align:center;text-decoration:none;color:var(--muted);font-size:.78rem;font-weight:600;padding:6px 2px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs a svg{width:22px;height:22px}
+nav.tabs a.on{color:var(--accent);background:var(--accent-soft)}
+@media (min-width:760px){
+  body{padding-bottom:0}
+  nav.tabs{position:static;border:0;background:transparent;padding:0;gap:4px;flex:0 0 auto}
+  nav.tabs a{flex-direction:row;font-size:.88rem;padding:6px 10px;white-space:nowrap}
+  nav.tabs a svg{width:18px;height:18px}
+  header.top .wrap{flex-wrap:nowrap}
+  .chips{order:3}
+}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.stack>*+*{margin-top:12px}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:10px 18px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:600;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,.flip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.row.between{justify-content:space-between}
+.grow{flex:1}
+.hero h1{margin-bottom:.3em}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:1.3rem}
+.stat span{font-size:.78rem;color:var(--muted)}
+.levels{display:grid;gap:10px}
+@media (min-width:760px){.levels{grid-template-columns:1fr 1fr}}
+.lvl{display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;cursor:pointer;transition:border-color .15s,transform .15s}
+.lvl:hover{border-color:var(--accent);transform:translateY(-1px)}
+.lvl .num{flex:0 0 44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:1.1rem}
+.lvl.done .num{background:var(--good-bg);color:var(--good)}
+.lvl.boss .num{background:var(--gold-bg);color:var(--gold)}
+.lvl h3{margin:0 0 2px}
+.lvl p{margin:0;font-size:.9rem;color:var(--muted)}
+.stars{color:var(--gold);letter-spacing:2px;font-size:.95rem}
+.stars .off{color:var(--line)}
+.status{font-size:.78rem;font-weight:600;margin-top:6px;color:var(--muted)}
+.status.ok{color:var(--good)}
+.badge{display:flex;gap:16px;align-items:center}
+.badge svg{flex:0 0 72px}
+.badge.locked svg{filter:grayscale(1);opacity:.4}
+.crumb{font-size:.9rem;text-decoration:none;color:var(--muted);display:inline-flex;align-items:center;gap:4px;margin-bottom:8px}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;margin:10px 0 14px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:9px;font-weight:600;color:var(--muted);cursor:pointer;font-size:.92rem}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.lesson{min-height:340px;touch-action:pan-y}
+.lesson h2{margin-top:4px}
+.counter{font-size:.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.dots{display:flex;gap:6px;margin:6px 0 12px}
+.dots i{height:6px;flex:1;border-radius:9px;background:var(--line)}
+.dots i.on{background:var(--accent)}
+ul.defs{padding-left:1.1em;margin:0 0 .8em}
+ul.defs li{margin-bottom:.45em}
+ol.steps{padding-left:1.3em;margin:0 0 .8em}
+ol.steps li{margin-bottom:.6em}
+.example{background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
+.aside{background:var(--gold-bg);border-left:4px solid var(--gold);padding:10px 12px;border-radius:8px;font-size:.95rem}
+table.t{border-collapse:collapse;width:100%;margin:0 0 .8em;font-size:.93rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+table.t th{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.navbtns{display:flex;gap:10px;margin-top:14px}
+.navbtns .btn{flex:1}
+.hint{font-size:.8rem;color:var(--muted);text-align:center;margin-top:8px}
+.cheat li{margin-bottom:.5em}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+.combo{color:var(--gold)}
+.qtext{font-size:1.1rem;font-weight:600;margin:6px 0 14px}
+.qtype{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:1rem;line-height:1.4;min-height:50px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt .k{display:inline-block;width:1.6em;font-weight:700;color:var(--muted)}
+.match{display:grid;gap:10px}
+.mrow{display:grid;gap:6px;padding:10px;border:1.5px solid var(--line);border-radius:12px}
+.mrow b{font-size:.98rem}
+.mrow select{font:inherit;font-size:.95rem;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+.mrow.right{border-color:var(--good);background:var(--good-bg)}
+.mrow.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.mrow .fix{font-size:.85rem;color:var(--good);font-weight:600}
+@media (min-width:760px){.mrow{grid-template-columns:200px 1fr;align-items:center}.mrow .fix{grid-column:2}}
+.fb{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:.97rem}
+.fb.right{background:var(--good-bg);border:1px solid var(--good)}
+.fb.wrong{background:var(--bad-bg);border:1px solid var(--bad)}
+.fb strong{display:block;margin-bottom:2px}
+.result{text-align:center}
+.result .big{font-size:3rem;font-weight:800;line-height:1}
+.result .stars{font-size:1.8rem}
+.missed{text-align:left}
+.missed li{margin-bottom:.7em}
+.toast{position:fixed;left:50%;top:70px;transform:translateX(-50%) translateY(-20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:.92rem;opacity:0;transition:all .3s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.search{width:100%;font:inherit;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.fchip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--muted)}
+.fchip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.glist{display:grid;gap:10px;grid-template-columns:1fr}
+@media (min-width:600px){.glist{grid-template-columns:1fr 1fr}}
+@media (min-width:860px){.glist{grid-template-columns:1fr 1fr 1fr}}
+.flip{perspective:1000px;cursor:pointer;border-radius:var(--radius)}
+.flip-in{display:grid;transition:transform .45s;transform-style:preserve-3d;min-height:150px}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.face.back{transform:rotateY(180deg)}
+.face .term{font-weight:700;font-size:1.08rem;margin:auto 0}
+.face .def{font-size:.93rem;flex:1}
+.face .meta{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--muted);margin-top:8px;gap:6px}
+.known-btn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 10px;font-size:.78rem;font-weight:700;cursor:pointer}
+.known-btn.on{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.tag{font-size:.72rem;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:99px}
+.kdot{color:var(--good);font-weight:700}
+.drill .flip-in{min-height:240px}
+.drill .face .term{font-size:1.4rem;text-align:center}
+.drill .face .def{font-size:1.05rem;display:flex;align-items:center}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+footer.disc{max-width:860px;margin:10px auto 20px;padding:0 16px;font-size:.8rem;color:var(--muted)}
+.srcs li{margin-bottom:.4em;word-break:break-word}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#home"><span class="logo">AB</span><span>Annuity Basics</span></a>
+  <nav class="tabs" id="tabs" aria-label="Main">
+    <a href="#home" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>Learn</a>
+    <a href="#glossary" data-tab="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>Flashcards</a>
+    <a href="#bridge" data-tab="bridge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 18h20M4 18V9m16 9V9M2 9c4 0 6-4 10-4s6 4 10 4M8 18v-5m8 5v-5"/></svg>Exam prep</a>
+    <a href="#about" data-tab="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>About</a>
+  </nav>
+  <div class="chips"><span class="chip xp" id="xpChip">0 XP</span><span class="chip fire" id="dayChip" title="Days in a row you've studied">0 day streak</span></div>
+</div></header>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer class="disc">Educational only. Not legal, tax, or investment advice. Product numbers (caps, rates, surrender schedules, free-withdrawal amounts) are examples and vary by contract. Rules change: verify North Carolina specifics with the NC Department of Insurance (ncdoi.gov) and the current Pearson VUE NC candidate handbook.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* Content. mc questions list the correct option FIRST (o[0]); options are shuffled at runtime.
+   match questions: pairs of [term, definition]. */
+const LEVELS = [
+{
+ id:0, title:"The map", sub:"What insurance is, who's who, and your path to a license",
+ cards:[
+ {h:"Insurance is a shared pot", b:`
+<p>Picture 1,000 homeowners. Each one chips in $500 a year. That's a $500,000 pot. In a normal year, maybe 2 houses burn down, and the pot pays to rebuild them.</p>
+<p>Nobody knows whose house will burn. So everyone pays a little, and nobody gets wiped out. That's <b>pooling risk</b>, and it's the whole idea behind insurance.</p>
+<ul class="defs">
+<li><b>Risk</b>: the chance that something bad and expensive happens.</li>
+<li><b>Premium</b>: the money you pay the insurance company. Monthly, yearly, or all at once.</li>
+<li><b>Policy</b>: the written contract. It says what's covered and what the company has to pay.</li>
+<li><b>Insurer</b>, also called the <b>carrier</b>: the insurance company. It collects premiums, invests them, and pays claims.</li>
+<li><b>Claim</b>: a request for the insurer to pay what the policy promises.</li>
+</ul>
+<p class="aside">Life insurance and annuities run on the same pooling math. They just pool different risks. Life insurance pools the risk of dying too early. Annuities pool the risk of living too long.</p>`},
+ {h:"Who's who: the carrier and the agent", b:`
+<p>The <b>carrier</b> builds the product, holds the money, and makes the promises. When an annuity says "guaranteed," the carrier is the one guaranteeing it. You'll see names like Allianz, Athene, or MassMutual.</p>
+<p>The <b>agent</b> sells it. State law usually calls the agent a <b>producer</b>: a person licensed to sell, solicit, or negotiate insurance. Same person, more formal word. The exam says "producer" a lot.</p>
+<p>The customer who buys the policy is the <b>policyholder</b>, or <b>owner</b>.</p>
+<p class="example">Linda buys an annuity from Carrier X through you. Carrier X owes her the guarantees. You owe her a good recommendation. She owns the contract.</p>`},
+ {h:"Who's who: the middle layer", b:`
+<p>Most independent agents don't sign up with carriers directly. They go through an <b>IMO</b> (independent marketing organization) or <b>FMO</b> (field marketing organization). The two names mean roughly the same thing. Think wholesaler.</p>
+<p>An IMO typically handles carrier contracting, product training, sales tools, marketing, and sometimes leads. Carriers pay the IMO an extra cut, called an <b>override</b>, on business its agents write. In life insurance you'll also hear <b>BGA</b> (brokerage general agency) for a similar middle layer.</p>
+<p>An IMO can't license you. Only the state does that.</p>
+<p>Where does a business like Annuity.com fit? On the consumer side. It helps people learn and compare, and connects them with licensed agents. The regulated part, recommending and selling a specific contract, has to be done by a licensed, appointed producer.</p>`},
+ {h:"The referees", b:`
+<p>In the U.S., <b>states</b> regulate insurance, not the federal government. Each state has a <b>Department of Insurance (DOI)</b>. In North Carolina it's the NC Department of Insurance, led by an elected <b>Commissioner of Insurance</b>. The DOI licenses producers, reviews products before they can be sold in the state, and handles complaints.</p>
+<ul class="defs">
+<li><b>NAIC</b> (National Association of Insurance Commissioners): the group of all state insurance regulators. It writes <b>model laws</b> that states can copy. Many annuity rules you'll learn started as NAIC models.</li>
+<li><b>NIPR</b> (National Insurance Producer Registry): a nonprofit created by the NAIC. It runs the online system for license applications and renewals. In NC, your application starts on nipr.com.</li>
+<li><b>NPN</b> (National Producer Number): your ID number. It follows you to every state.</li>
+<li><b>Line of authority (LOA)</b>: which kinds of insurance your license covers. Life, Accident & Health, and so on.</li>
+<li><b>Appointment</b>: a carrier's official OK for you to sell its products, filed with the state. A license alone isn't enough. You need each carrier's appointment too.</li>
+</ul>`},
+ {h:"Your path in 5 steps (NC)", b:`
+<ol class="steps">
+<li><b>Apply on NIPR</b> for the <b>Life</b> line of authority. In NC, fixed and indexed annuities sit under Life. You apply first. Then Pearson VUE (the testing company) emails you an authorization to schedule the exam.</li>
+<li><b>Pass the NC Life Agent exam.</b> 55 scored questions plus up to 5 unscored ones, 1 hour 15 minutes, and you need a scaled score of 70. A prelicense course has been optional in NC since Oct 1, 2025. The exam is still required.</li>
+<li><b>Fingerprints and background check.</b> Then the state issues your license.</li>
+<li><b>Get appointed</b> by each carrier whose products you'll sell. Usually an IMO's contracting team handles the paperwork.</li>
+<li><b>Take the one-time 4-hour annuity best-interest training</b>, plus each carrier's product training, before you sell annuities.</li>
+</ol>
+<p class="aside">Variable annuities are a separate track: a Variable line of authority plus FINRA securities registration. You don't need either for fixed or indexed annuities. Level 3 explains the difference.</p>`}
+ ],
+ cheat:[
+ "Insurance = pooling risk. Many people pay premiums so the few who have losses get paid.",
+ "Premium = what you pay. Policy = the contract. Carrier (insurer) = the company. Claim = asking it to pay.",
+ "Producer = the legal word for agent.",
+ "IMO/FMO = wholesaler between carriers and agents. Earns overrides. Can't license you.",
+ "States regulate insurance. NC DOI licenses you. NAIC writes model laws states can adopt.",
+ "NIPR = license application portal. NPN = your producer ID.",
+ "LOA = what your license covers. In NC, fixed and indexed annuities = Life LOA.",
+ "Appointment = a carrier's OK to sell its products. No appointment, no sale.",
+ "Path: NIPR application → Life exam (Pearson VUE) → fingerprints → license → appointment + 4-hour annuity training."
+ ],
+ quiz:[
+ {t:"mc", q:"What's a premium?", o:["The money you pay the insurer for coverage","The money the insurer pays when you file a claim","The agent's commission","The written contract"], why:"Premium is what goes in. What comes out on a claim is the benefit, and the contract itself is the policy."},
+ {t:"mc", q:"Which company actually backs the guarantees in an annuity?", o:["The carrier that issued it","The IMO that contracted the agent","The agent who sold it","The NC Department of Insurance"], why:"The carrier makes the promises and holds the money. IMOs and agents sell. The DOI regulates."},
+ {t:"mc", q:"In North Carolina, fixed and indexed annuities are sold under which line of authority?", o:["Life","Accident & Health","Variable Life & Variable Annuity","Property & Casualty"], why:"NC's coverages chart lists fixed and indexed annuities under Life. That's why you take the Life Agent exam."},
+ {t:"match", q:"Match each term to what it is.", pairs:[["NIPR","Online system for license applications"],["IMO","Wholesaler between carriers and agents"],["NAIC","Group of state regulators that writes model laws"],["NPN","Your producer ID number"]], why:"These four show up constantly in contracting paperwork and on the exam."},
+ {t:"mc", tag:"Scenario", q:"Austin's NC Life license was just issued. A client wants Carrier Z's indexed annuity tomorrow. What still stands in the way?", o:["An appointment with Carrier Z and the 4-hour annuity training","Nothing. The license is enough","A FINRA Series 7","A second state exam just for annuities"], why:"The license lets you sell Life products in NC. You still need Carrier Z's appointment and the one-time annuity training. FINRA only matters for variable products."},
+ {t:"mc", q:"Who regulates insurance in the U.S.?", o:["Each state, through its Department of Insurance","The SEC","The IRS","The NAIC, which issues licenses"], why:"Insurance is state-regulated. The NAIC coordinates and writes models but doesn't license anyone. The SEC only steps in for securities like variable annuities."},
+ {t:"mc", q:"Do you need a prelicense course to get an NC Life license today?", o:["No. It's optional since Oct 1, 2025, but the exam is required","Yes, 40 hours","Yes, but only for annuities","No, and the exam is optional too"], why:"NC dropped the prelicense education requirement effective Oct 1, 2025. You still have to pass the Pearson VUE exam."}
+ ]
+},
+{
+ id:1, title:"Life insurance basics", sub:"Owner, insured, beneficiary, term vs permanent",
+ cards:[
+ {h:"Three roles: owner, insured, beneficiary", b:`
+<p>Every life policy has three roles. One person can play two or even all three.</p>
+<ul class="defs">
+<li><b>Owner</b>: controls the policy. Usually pays the premium, names the beneficiary, and can change or cancel the policy.</li>
+<li><b>Insured</b>: the person whose life is covered. When the insured dies, the policy pays.</li>
+<li><b>Beneficiary</b>: the person, trust, or charity that gets the money.</li>
+</ul>
+<p class="example">Maria buys a policy on her husband Dev's life and names herself beneficiary. Maria is the owner and the beneficiary. Dev is the insured. If Dev dies, Maria gets paid.</p>
+<p>To buy a policy on someone else, you need <b>insurable interest</b>: a real reason to want them alive, like family or a business tie. It has to exist when the policy is bought. This rule keeps strangers from betting on your death.</p>`},
+ {h:"The death benefit", b:`
+<p>The <b>death benefit</b>, also called the <b>face amount</b>, is what the policy pays when the insured dies. A "$500,000 policy" has a $500,000 death benefit.</p>
+<p>The death benefit is generally <b>income-tax-free</b> to the beneficiary. Big deal, and a common exam question.</p>
+<p>You can name more than one beneficiary. The <b>primary beneficiary</b> gets paid first. The <b>contingent beneficiary</b> gets paid only if the primary has already died. If no beneficiary is named or alive, the money usually goes to the insured's <b>estate</b> (everything a person leaves behind, handled through probate).</p>
+<p class="example">Dev owns a policy on himself. He names Maria primary and their daughter Ana contingent. If Maria has already died when Dev dies, Ana gets the money.</p>`},
+ {h:"Term life: rent the coverage", b:`
+<p><b>Term life</b> covers you for a set period, like 10, 20, or 30 years. Die during the term and the beneficiary gets the death benefit. Outlive it and the coverage simply ends.</p>
+<p>It's pure protection with no savings inside, so it's the cheapest way to buy a big death benefit.</p>
+<p class="example">Dev, 35, buys a 20-year, $500,000 term policy while the kids are little and the mortgage is big. At 55 it ends. By then the mortgage is mostly paid off and the kids are grown. That was the plan.</p>
+<p>Two features to know:</p>
+<ul class="defs">
+<li><b>Renewable</b>: you can extend the term without a new health exam, at a higher price.</li>
+<li><b>Convertible</b>: you can switch to a permanent policy without proving you're still healthy.</li>
+</ul>`},
+ {h:"Permanent life: own the coverage", b:`
+<p><b>Permanent life insurance</b> lasts your whole life as long as it stays funded. It also builds <b>cash value</b>: a savings piece inside the policy that grows <b>tax-deferred</b> (no tax on the growth while it stays inside). You can borrow against it with a <b>policy loan</b>.</p>
+<ul class="defs">
+<li><b>Whole life</b>: fixed premium, guaranteed death benefit, guaranteed cash value growth. Simple and pricey. Some policies pay <b>dividends</b>, basically a refund of extra premium when the company does well. Dividends aren't guaranteed.</li>
+<li><b>Universal life (UL)</b>: the flexible one. You can change how much you pay and, within limits, the death benefit. Cash value earns interest, and the insurer takes monthly charges for the cost of insurance. Underfund it and it can lapse.</li>
+</ul>
+<p>Two spin-offs: <b>indexed universal life (IUL)</b> credits interest based on a market index, same idea as the indexed annuities in Level 3. <b>Variable universal life (VUL)</b> invests in funds and counts as a security.</p>`},
+ {h:"Underwriting, in one breath", b:`
+<p><b>Underwriting</b> is how the insurer decides whether to accept you and what to charge, based on your risk: age, health, tobacco, hobbies, driving record.</p>
+<p class="example">Two 40-year-olds each want $500,000 of term. One runs marathons. The other smokes a pack a day. The smoker pays a lot more, or gets declined.</p>
+<p>Annuities usually need little or no health underwriting. With an annuity, the insurer's risk is that you live a long time, so poor health doesn't scare it off.</p>`},
+ {h:"Contract words you'll see on the exam", b:`
+<ul class="defs">
+<li><b>Free look</b>: a window after you receive the policy when you can return it for a full refund. In NC, at least 10 days.</li>
+<li><b>Grace period</b>: extra time to pay a late premium before the policy ends, usually 30 or 31 days. Coverage continues during it.</li>
+<li><b>Lapse</b>: the policy ends because premiums weren't paid.</li>
+<li><b>Incontestable clause</b>: once the policy has been in force 2 years, the insurer generally can't cancel it or deny a claim because of mistakes or lies on the application.</li>
+<li><b>Suicide clause</b>: if the insured dies by suicide within a set period, usually 2 years, the insurer typically refunds the premiums instead of paying the death benefit.</li>
+<li><b>Rider</b>: an add-on that changes or adds benefits, often for an extra cost.</li>
+</ul>
+<p class="aside">The NC Life exam spends far more time on life insurance than on annuities. The Exam prep tab has the breakdown.</p>`}
+ ],
+ cheat:[
+ "Owner controls the policy. Insured = the life covered. Beneficiary = who gets paid.",
+ "Insurable interest has to exist when the policy is bought.",
+ "Death benefit (face amount) is generally income-tax-free to beneficiaries.",
+ "Primary beneficiary gets paid first. Contingent gets paid if the primary is gone. No one left = insured's estate.",
+ "Term = set period, no cash value, cheapest. Renewable = extend it. Convertible = switch to permanent, no health questions.",
+ "Permanent = lifelong + cash value. Whole life is fixed and guaranteed. Universal life is flexible.",
+ "Underwriting = pricing the risk. Annuities need little or none.",
+ "Free look: NC at least 10 days. Grace period: about 30/31 days. Incontestable after 2 years. Suicide clause usually 2 years."
+ ],
+ quiz:[
+ {t:"mc", q:"Maria owns a policy on Dev's life. Ana is the beneficiary. Who is the insured?", o:["Dev","Maria","Ana","The carrier"], why:"The insured is the person whose life is covered. Maria controls the policy, and Ana collects."},
+ {t:"mc", q:"Which type of life insurance has no cash value and ends after a set number of years?", o:["Term","Whole life","Universal life","Indexed universal life"], why:"Term is pure protection for a period. The other three are permanent and build cash value."},
+ {t:"mc", q:"How is a life insurance death benefit generally taxed to the beneficiary?", o:["Income-tax-free","As ordinary income","As a capital gain","With a 10% penalty if they're under 59½"], why:"Life insurance death benefits are generally income-tax-free. Annuity death benefits work differently, as Level 5 shows."},
+ {t:"match", q:"Match each role to what it means.", pairs:[["Owner","Controls the policy and names the beneficiary"],["Insured","The person whose death triggers the payout"],["Beneficiary","Receives the death benefit"],["Contingent beneficiary","Gets paid only if the primary has died"]], why:"Owner, insured, and beneficiary can be three people or one. The exam loves mixing them up."},
+ {t:"mc", q:"Which term-life feature lets you switch to permanent coverage without new medical underwriting?", o:["Convertible","Renewable","Incontestable","Grace period"], why:"Convertible = change the type of policy. Renewable = extend the term."},
+ {t:"mc", tag:"Scenario", q:"Jordan wants lifelong coverage, a premium that never changes, and guaranteed cash value. Best fit?", o:["Whole life","20-year term","Universal life","Variable universal life"], why:"Whole life is the fixed-and-guaranteed one. UL has flexible premiums, and VUL cash value can drop with the market."},
+ {t:"mc", q:"Can a stranger buy a life policy on you and name themselves beneficiary?", o:["No. They need insurable interest when the policy is bought","Yes, if they pay the premium","Yes, if you're over 65","No. Only spouses can buy policies on others"], why:"Insurable interest means a family, financial, or business tie. Spouses, parents, business partners, and lenders can qualify. Strangers can't."},
+ {t:"mc", tag:"Scenario", q:"Dev misses a premium. The grace period is 31 days. He dies on day 20 without paying. What happens?", o:["The policy pays, minus the overdue premium","Nothing. The policy already lapsed","The insurer refunds past premiums","The insurer denies it under the incontestable clause"], why:"Coverage stays in force during the grace period. The insurer usually subtracts the unpaid premium from the death benefit."}
+ ]
+},
+{
+ id:2, title:"What an annuity is", sub:"Life insurance flipped: premium in, income out",
+ cards:[
+ {h:"Life insurance, flipped", b:`
+<p>Life insurance protects your family if you die too soon. An <b>annuity</b> protects you if you live too long and run out of money. That second risk has a name: <b>longevity risk</b>.</p>
+<p>An annuity is a contract with an insurance company. You give it money. In return it promises growth, income, or both. The big trick is that it can promise income <b>for life</b>, however long that turns out to be.</p>
+<p>How can an insurer promise that? Pooling again. Out of 1,000 people who start income at 65, some will die at 72 and some at 98. The money not paid to the early deaths helps fund the long lives. Nobody knows which group they're in, so everyone gets a paycheck they can't outlive.</p>`},
+ {h:"The roles: owner, annuitant, beneficiary", b:`
+<ul class="defs">
+<li><b>Owner</b>: buys and controls the annuity. Can take withdrawals, name the beneficiary, and make changes.</li>
+<li><b>Annuitant</b>: the person whose life the contract is built around. Lifetime payments are based on the annuitant's age and life expectancy. It's the annuity version of the "insured."</li>
+<li><b>Beneficiary</b>: gets what's left if the owner or annuitant (depends on the contract) dies before the money's paid out.</li>
+</ul>
+<p class="example">Linda, 60, buys an annuity. She's the owner and the annuitant. She names her son Jake as beneficiary. Most annuities look like this, with the owner and annuitant being the same person.</p>`},
+ {h:"Two phases: grow, then pay", b:`
+<p>A deferred annuity has two phases.</p>
+<ul class="defs">
+<li><b>Accumulation phase</b>: the money sits and grows. No tax on the growth yet. That's <b>tax-deferred</b>.</li>
+<li><b>Payout phase</b>, also called <b>annuitization</b>: the insurer turns the account into a stream of payments. Once you annuitize, it's usually permanent. You trade the lump sum for the checks.</li>
+</ul>
+<p class="example">Linda puts in $100,000 at 60. It earns 3% a year. At 70 it's worth about $134,400. Now she annuitizes and gets a monthly check for the rest of her life.</p>
+<p>Annuitizing is optional, and lots of people never do it. They take withdrawals instead, or use an income rider (Level 4).</p>`},
+ {h:"Immediate vs deferred", b:`
+<p>The question here is when income starts.</p>
+<ul class="defs">
+<li><b>Immediate annuity</b>: payments start soon, within one year of buying. You hand over a lump sum and the checks begin. Often called a <b>SPIA</b> (single premium immediate annuity).</li>
+<li><b>Deferred annuity</b>: grows first, pays later. Most fixed and indexed annuities sold today are deferred.</li>
+</ul>
+<p class="example">Bob, 70, gives an insurer $200,000 and gets his first monthly check next month. That's immediate. Linda, 60, puts in $100,000 and won't touch it for 10 years. That's deferred.</p>`},
+ {h:"How you pay in: single vs flexible", b:`
+<ul class="defs">
+<li><b>Single premium</b>: one lump sum, one time.</li>
+<li><b>Flexible premium</b>: you can add money over time, in different amounts.</li>
+</ul>
+<p>Combine "how you pay" with "when it pays" and you get the names you'll see:</p>
+<ul class="defs">
+<li><b>SPIA</b>: single premium immediate annuity</li>
+<li><b>SPDA</b>: single premium deferred annuity</li>
+<li><b>FPDA</b>: flexible premium deferred annuity</li>
+</ul>
+<p class="aside">Immediate annuities are always single premium. Income starts right away, so there's no stretch of time to keep paying in.</p>`},
+ {h:"Payout options (very testable)", b:`
+<p>When someone annuitizes, they pick how the checks work. The rule of thumb: more guarantees, smaller checks.</p>
+<ul class="defs">
+<li><b>Life only</b> (also called straight life or pure life): pays for life, then stops. Nothing goes to heirs. Biggest check.</li>
+<li><b>Life with period certain</b>: pays for life, but guarantees a minimum number of years, say 10. Die in year 3 and the beneficiary gets the other 7 years.</li>
+<li><b>Refund</b> (cash refund or installment refund): pays for life. If you die early, the beneficiary gets whatever's left of what you paid in.</li>
+<li><b>Joint and survivor</b>: covers two people, usually spouses. Payments keep going until the second one dies, sometimes reduced to something like 50% or 75%.</li>
+<li><b>Period certain</b>: pays for a set number of years, and that's it. Not tied to anyone's life.</li>
+</ul>
+<p class="example">Say Linda's $134,400 could buy about $800 a month life only. Adding a 10-year guarantee might drop that to $760. A joint payout with her husband might be $680. Made-up numbers, real pattern.</p>`}
+ ],
+ cheat:[
+ "Annuity = contract with an insurer for growth and/or income. Protects against longevity risk (outliving your money).",
+ "Owner controls. Annuitant = the life payments are based on. Beneficiary gets what's left.",
+ "Accumulation phase = growing, tax-deferred. Payout phase = annuitization, usually irreversible.",
+ "Immediate = income within 1 year, always single premium. Deferred = grow first.",
+ "Single premium = one lump sum. Flexible premium = add money over time. SPIA, SPDA, FPDA.",
+ "Life only pays the most per month. Each guarantee you add (period certain, refund, a second life) lowers the check.",
+ "Joint and survivor = pays until the second person dies."
+ ],
+ quiz:[
+ {t:"mc", q:"What risk does an annuity mainly protect against?", o:["Living longer than your money lasts","Dying too early","Your house burning down","A stock market crash"], why:"That's longevity risk. Life insurance is the one that covers dying too early."},
+ {t:"mc", q:"In an annuity, whose life are lifetime payments based on?", o:["The annuitant's","The agent's","The beneficiary's","Always the owner's, even if someone else is the annuitant"], why:"The annuitant is the measuring life. Often the owner and annuitant are the same person, but not always."},
+ {t:"mc", tag:"Scenario", q:"Bob, 70, hands an insurer $200,000 and his first check arrives next month. What did he buy?", o:["A single premium immediate annuity (SPIA)","A flexible premium deferred annuity","A term life policy","A variable universal life policy"], why:"One lump sum plus payments starting within a year = SPIA."},
+ {t:"match", q:"Match each term to what it means.", pairs:[["Accumulation phase","Money grows, tax-deferred"],["Annuitization","Account turned into a stream of payments"],["Flexible premium","You can add money over time"],["Deferred annuity","Grows first, pays later"]], why:"Accumulation then annuitization are the two phases. Single vs flexible is about paying in. Immediate vs deferred is about when income starts."},
+ {t:"mc", q:"Which payout option gives the biggest monthly check from the same amount of money?", o:["Life only","Joint and survivor","Life with 20-year period certain","Cash refund"], why:"Life only has no extra guarantees, so the insurer can pay the most. Every guarantee costs something."},
+ {t:"mc", tag:"Scenario", q:"Linda picked life with 10-year period certain and dies in year 4. What happens?", o:["Her beneficiary gets payments for the remaining 6 years","Payments stop immediately","Her beneficiary gets all her premiums back in a lump sum","Payments continue for her beneficiary's whole life"], why:"Period certain guarantees a minimum number of years. She got 4, so her beneficiary gets the other 6."},
+ {t:"mc", q:"Can an immediate annuity be bought with flexible premiums?", o:["No. Immediate annuities are single premium","Yes, always","Only inside an IRA","Only if the owner is over 65"], why:"Income starts right away, so there's no time to keep paying in. Immediate means single premium."},
+ {t:"mc", tag:"Scenario", q:"A married couple wants income that keeps coming as long as either of them is alive. Which option?", o:["Joint and survivor","Life only","Period certain","Single life with cash refund"], why:"Joint and survivor pays until the second death. It pays less per month than life only on one person."}
+ ]
+},
+{
+ id:3, title:"The flavors", sub:"Fixed, MYGA, fixed indexed, and variable",
+ cards:[
+ {h:"The menu: three ways to grow", b:`
+<p>Annuities differ mostly in one thing: <b>how the insurer credits growth</b> to your account.</p>
+<ul class="defs">
+<li><b>Fixed</b>: the insurer pays a set interest rate. Think CD from an insurance company.</li>
+<li><b>Fixed indexed (FIA)</b>: interest depends on how a market index does, with a floor so you don't lose money when the index drops.</li>
+<li><b>Variable</b>: your money is invested in funds. It can grow a lot, or lose value.</li>
+</ul>
+<p>Fixed and fixed indexed annuities are insurance products. In NC you sell them with a Life license. Variable annuities are securities and need more licensing.</p>`},
+ {h:"Fixed annuities and MYGAs", b:`
+<p>A <b>fixed annuity</b> pays an interest rate the insurer declares. The contract also has a <b>guaranteed minimum rate</b> it can never drop below. Your <b>principal</b>, the money you put in, doesn't go down because of the market.</p>
+<p>A <b>MYGA</b> (multi-year guaranteed annuity) is a type of fixed annuity that locks one rate for a set number of years.</p>
+<p class="example">Linda puts $100,000 in a 5-year MYGA at 5%. After 5 years she has about $127,600. No surprises.</p>
+<p>People compare MYGAs to bank CDs. Fair, with two differences: the growth is tax-deferred, and the insurance company backs it, not the FDIC.</p>`},
+ {h:"Fixed indexed annuities: the idea", b:`
+<p>An <b>FIA</b> credits interest based on a market <b>index</b>, like the S&P 500. An index is a scoreboard that tracks a group of stocks. You don't own the stocks. The index is only used to calculate your interest.</p>
+<p>The selling point is the <b>floor</b>, usually 0%. If the index drops, you get 0% for that period instead of a loss. The trade-off is that your upside is limited.</p>
+<p>Interest is figured once per <b>crediting period</b>, usually one year. The most common method compares the index on your start date to the same date a year later. That's <b>annual point-to-point</b>. Credited gains are locked in, so a later drop can't take them back.</p>
+<p class="aside">The 0% floor protects against index losses only. Surrender charges, rider fees, or withdrawing too much early can still shrink the account.</p>`},
+ {h:"The limiters: cap, participation rate, spread", b:`
+<p>The insurer limits your share of the index gain with one (sometimes more) of these:</p>
+<ul class="defs">
+<li><b>Cap</b>: the most you can earn in a period. Cap 8%, index up 12%: you get 8%.</li>
+<li><b>Participation rate</b>: the percent of the gain you get. 60% participation, index up 12%: you get 7.2%.</li>
+<li><b>Spread</b> (or margin): a slice taken off the top. 2% spread, index up 12%: you get 10%.</li>
+</ul>
+<p>Two fine-print points. Most index tracking leaves out stock dividends, so your index return is usually lower than "the market." And insurers can typically change caps and rates each period, within minimums the contract guarantees.</p>`},
+ {h:"Worked example: Linda's FIA", b:`
+<p>Linda puts $100,000 in an FIA with an 8% annual cap and a 0% floor.</p>
+<div class="tablewrap"><table class="t"><tr><th>Year</th><th>Index</th><th>Credited</th><th>Value</th></tr>
+<tr><td>1</td><td>+12%</td><td>8% (capped)</td><td>$108,000</td></tr>
+<tr><td>2</td><td>-15%</td><td>0% (floor)</td><td>$108,000</td></tr>
+<tr><td>3</td><td>+5%</td><td>5%</td><td>$113,400</td></tr></table></div>
+<p>The index went up, crashed, then went up a little. Her account never went backward. But in year 1 she missed 4 points of gain. That's the deal in one table.</p>
+<p class="example">Same year 1 with a 60% participation rate instead of a cap: 12% × 60% = 7.2%, so $107,200. With a 2% spread instead: 12% - 2% = 10%, so $110,000.</p>`},
+ {h:"Variable annuities (not your lane, yet)", b:`
+<p>A <b>variable annuity</b> puts your money into <b>subaccounts</b>: investment funds inside the annuity, a lot like mutual funds. The value moves with the market, and you can lose principal.</p>
+<p>The customer carries the investment risk, so a variable annuity is a <b>security</b>. Selling one takes a <b>FINRA</b> registration (FINRA regulates securities brokers; think exams like the Series 6 or 7, through a broker-dealer), state securities registration, and the state's Variable line of authority. It's sold with a <b>prospectus</b>, a long legal document laying out the funds, fees, and risks.</p>
+<p>Variable annuities also tend to cost more, with yearly charges for insurance, admin, the funds, and any riders.</p>
+<p class="aside">You'll also hear about <b>RILAs</b> (registered index-linked annuities). They work like FIAs but can lose some money, so they're securities too.</p>`}
+ ],
+ cheatHtml:`<div class="tablewrap"><table class="t"><tr><th>Type</th><th>How it grows</th><th>Can the market shrink it?</th><th>License</th></tr>
+<tr><td>Fixed</td><td>Declared rate + guaranteed minimum</td><td>No</td><td>Life</td></tr>
+<tr><td>MYGA</td><td>One rate locked for X years</td><td>No</td><td>Life</td></tr>
+<tr><td>FIA</td><td>Index-linked, limited by cap / participation / spread</td><td>No (0% floor)</td><td>Life</td></tr>
+<tr><td>Variable</td><td>Subaccounts (funds)</td><td>Yes</td><td>Variable LOA + FINRA</td></tr></table></div>`,
+ cheat:[
+ "Cap: credited = the lesser of the index gain or the cap.",
+ "Participation rate: credited = index gain × participation rate.",
+ "Spread: credited = index gain - spread (never below 0%).",
+ "Index drops: credited 0%. Gains already credited are locked in.",
+ "FIA owners don't own the stocks. Dividends usually aren't counted.",
+ "Variable annuity = security. Prospectus, subaccounts, market risk, higher fees."
+ ],
+ quiz:[
+ {t:"mc", tag:"Math", q:"An FIA has a 6% cap. The index rises 10% this year. What's credited?", o:["6%","10%","4%","0%"], why:"The cap is the maximum. 10% is above 6%, so you get 6%."},
+ {t:"mc", tag:"Math", q:"An FIA has a 50% participation rate and no cap. The index rises 10%. What's credited?", o:["5%","10%","50%","15%"], why:"50% of 10% = 5%."},
+ {t:"mc", tag:"Math", q:"An FIA has a 0% floor and 7% cap. The index drops 20%. What does index crediting do to the account?", o:["Credits 0%, so no loss from the drop","Takes away 20%","Takes away 7%","Credits 7%"], why:"The floor means an index drop credits 0%. Fees or withdrawals could still lower the value, but the index can't."},
+ {t:"mc", tag:"Math", q:"An FIA has a 3% spread. The index rises 9%. What's credited?", o:["6%","9%","3%","12%"], why:"Subtract the spread: 9% - 3% = 6%. If the index had gained less than 3%, you'd get 0%."},
+ {t:"mc", q:"What's a MYGA?", o:["A fixed annuity that locks one rate for a set number of years","A variable annuity with guaranteed income","A type of life insurance","An index with a cap"], why:"Multi-year guaranteed annuity. CD-like, but issued by an insurer."},
+ {t:"mc", tag:"Scenario", q:"Austin has an NC Life license and the right appointments. Which product still needs more licensing?", o:["A variable annuity","A fixed indexed annuity","A MYGA","A single premium immediate annuity"], why:"Variable annuities are securities. They need FINRA registration and the Variable line of authority."},
+ {t:"mc", q:"In an FIA, is the owner's money invested directly in the S&P 500?", o:["No. The index is only used to calculate interest","Yes, in an S&P 500 fund","Yes, but only half of it","Only during the crediting period"], why:"FIA owners don't own the stocks. That's why they don't get dividends, and why the floor can work."},
+ {t:"match", q:"Match each term to what it means.", pairs:[["Cap","Maximum interest credited in a period"],["Participation rate","Percent of the index gain you get"],["Spread","Percentage subtracted from the index gain"],["Subaccount","Investment fund inside a variable annuity"]], why:"Cap, participation rate, and spread are the three FIA limiters. Subaccounts belong to variable annuities."},
+ {t:"mc", q:"Which document comes with a variable annuity because it's a security?", o:["A prospectus","A policy summary","An illustration","A beneficiary form"], why:"Securities are sold with a prospectus describing the funds, fees, and risks."}
+ ]
+},
+{
+ id:4, title:"The fine print", sub:"Surrender charges, free withdrawals, riders, fees, guarantees",
+ cards:[
+ {h:"Surrender period and surrender charges", b:`
+<p>Annuities are built for the long haul. If you pull out more than allowed during the first several years, the insurer takes a <b>surrender charge</b>. That stretch of years is the <b>surrender period</b>. It's often 5 to 10 years, and the charge usually drops each year.</p>
+<div class="tablewrap"><table class="t"><tr><th>Year</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8+</td></tr>
+<tr><th>Charge</th><td>7%</td><td>6%</td><td>5%</td><td>4%</td><td>3%</td><td>2%</td><td>1%</td><td>0%</td></tr></table></div>
+<p class="small muted">Example schedule. Real ones vary by contract.</p>
+<p class="example">Linda puts in $100,000 and cashes out completely in year 2. A 6% charge means about $6,000 gone. In year 8 she'd pay nothing.</p>
+<p>Why do these exist? The insurer invests your money in long-term bonds and pays the agent's commission up front. Leaving early breaks that plan, and the charge covers it.</p>
+<p class="aside">Some contracts also have a <b>market value adjustment (MVA)</b>. If interest rates have risen since you bought, leaving early costs a bit more. If rates have fallen, it can work in your favor.</p>`},
+ {h:"Free withdrawals", b:`
+<p>You're not totally locked in. Most annuities allow a <b>free withdrawal</b> each year with no surrender charge, often 10% of the account value.</p>
+<p class="example">Linda's annuity is worth $110,000 in year 3. She can take $11,000 with no surrender charge. If she takes $20,000, the extra $9,000 gets hit with the charge.</p>
+<p>"Free" means free of surrender charges. It doesn't mean free of taxes. The IRS still wants its share (Level 5).</p>
+<p>Many contracts also waive surrender charges if the owner goes into a nursing home or gets a terminal illness diagnosis. Details vary by contract.</p>`},
+ {h:"Riders: optional add-ons", b:`
+<p>A <b>rider</b> adds a benefit to the contract. Many cost extra, often a yearly fee somewhere around 1% of a calculated amount. It varies a lot.</p>
+<p>The big one is the <b>income rider</b>, often a <b>GLWB</b> (guaranteed lifetime withdrawal benefit). It guarantees you can withdraw a set amount every year for life, even if your account drops to zero. And you keep control of the account. No annuitizing.</p>
+<p>The income is calculated from a <b>benefit base</b> (also called income base). The benefit base is a number used to figure income. It isn't money you can walk away with. Your real money is the <b>account value</b>.</p>
+<p class="example">At 70, Linda's benefit base is $130,000, but her account value is $112,000. The rider pays 6% of the benefit base: $7,800 a year for life. If she cancels and cashes out instead, she gets the $112,000 (minus any surrender charge), not $130,000.</p>
+<p>Another common one is an <b>enhanced death benefit</b> rider, which pays heirs more than the plain account value.</p>`},
+ {h:"Fees and bonuses", b:`
+<p>Fixed annuities and FIAs usually have no annual fee on the base contract. The insurer makes its money on the difference between what it earns investing and what it credits you. That's why caps and rates are where they are. Riders are the main fee to watch.</p>
+<p>Variable annuities usually stack several fees: a <b>mortality and expense (M&E) charge</b>, admin fees, fund expenses, and rider fees.</p>
+<p>Some annuities offer a <b>premium bonus</b>: the insurer adds, say, 5% to your deposit on day one. Sounds great. But bonus products often come with longer surrender periods, lower caps, or a bonus that <b>vests</b> (becomes fully yours) only over time. Nothing's free.</p>`},
+ {h:"Who stands behind the guarantee?", b:`
+<p>Every annuity guarantee is only as good as the insurer making it. Contracts say the guarantees are backed by the insurer's <b>claims-paying ability</b>. Annuities aren't FDIC-insured like bank deposits.</p>
+<p>Independent agencies grade insurers' financial strength: AM Best, S&P, Moody's, and Fitch. Higher ratings mean a stronger company.</p>
+<p>If an insurer fails, every state has a <b>guaranty association</b>, a safety net funded by the other insurers in that state. It covers annuity values only up to limits set by state law. NC law bars agents from using guaranty association coverage to sell insurance, so never pitch it.</p>`}
+ ],
+ cheat:[
+ "Surrender charge = fee for taking out too much early. Surrender period is often 5-10 years, and the charge declines.",
+ "Free withdrawal: often 10% a year with no surrender charge. Taxes can still apply.",
+ "Income rider (GLWB) = lifetime withdrawals even if the account hits $0. No annuitizing.",
+ "Benefit base = a number for calculating income. Account value = the real money.",
+ "Fixed/FIA: usually no base-contract fee; riders cost extra. Variable: M&E, admin, fund, and rider fees.",
+ "Bonuses usually come with trade-offs: longer surrender period, lower caps, vesting.",
+ "Guarantees = the insurer's claims-paying ability. Not FDIC-insured.",
+ "Guaranty association = limited state safety net. Never use it as a sales pitch."
+ ],
+ quiz:[
+ {t:"mc", tag:"Math", q:"Linda's annuity is worth $50,000. The year-3 surrender charge is 5%. She cashes out everything. Ignoring the free withdrawal, what's the surrender charge?", o:["$2,500","$5,000","$500","$0"], why:"5% of $50,000 = $2,500. Many contracts only charge on the amount above the free withdrawal, which would make it a little less."},
+ {t:"mc", tag:"Math", q:"Account value is $80,000 and the contract allows a 10% free withdrawal. How much can she take this year with no surrender charge?", o:["$8,000","$800","$10,000","$80,000"], why:"10% of $80,000 = $8,000. Anything above that is subject to the surrender charge."},
+ {t:"mc", q:"What's true about the benefit base on an income rider?", o:["It's used to calculate income, but you can't cash it out","It's the cash you get if you surrender","It's insured by the FDIC","It's always equal to the account value"], why:"The benefit base is a calculation number. The account value is what you'd actually walk away with."},
+ {t:"mc", q:"What backs the guarantees in a fixed annuity?", o:["The insurer's claims-paying ability","The FDIC","The federal government","The agent's E&O insurance"], why:"The insurer stands behind its promises. The state guaranty association is a limited safety net if the insurer fails."},
+ {t:"mc", tag:"Scenario", q:"A prospect asks, \"Is my money safe?\" Which answer is off-limits?", o:["\"Don't worry, the state guaranty association covers you.\"","\"The guarantees depend on the insurer's financial strength.\"","\"Here's this insurer's AM Best rating.\"","\"Annuities aren't FDIC-insured.\""], why:"Producers can't use guaranty association coverage as a sales tool. Talk about the insurer's financial strength instead."},
+ {t:"mc", q:"An annuity offers a 10% premium bonus. What should make you look closer?", o:["Bonus products often have longer surrender periods, lower caps, or vesting","Bonuses are illegal","Bonuses are taxed at 50%","Nothing. It's free money"], why:"The insurer pays for the bonus somehow. Check the surrender schedule, caps, and vesting before you get excited."},
+ {t:"match", q:"Match each term to what it means.", pairs:[["Surrender charge","Fee for withdrawing too much early"],["Free withdrawal","Amount you can take yearly with no surrender charge"],["GLWB","Lifetime income withdrawals without annuitizing"],["M&E charge","Common yearly fee in variable annuities"]], why:"These four are what you check first when you read any annuity's disclosure."}
+ ]
+},
+{
+ id:5, title:"Taxes 101", sub:"Tax deferral, qualified vs not, 59½, LIFO, 1035",
+ cards:[
+ {h:"Tax-deferred: pay later, not never", b:`
+<p>Money inside an annuity grows <b>tax-deferred</b>. You don't pay tax on the growth each year. You pay when you take it out.</p>
+<p class="example">Linda puts in $100,000 of savings. It grows to $150,000. She owes nothing until she withdraws. When she does, the $50,000 of growth is taxed. Her original $100,000 isn't.</p>
+<p>The growth is taxed as <b>ordinary income</b>, at the same rates as a paycheck, not the lower capital gains rates.</p>
+<p>Why bother deferring? Money that would have gone to taxes each year stays in the account and keeps earning. Over 10+ years that adds up.</p>`},
+ {h:"Qualified vs non-qualified", b:`
+<p>Where the money came from changes the tax rules.</p>
+<ul class="defs">
+<li><b>Qualified</b>: money from a tax-advantaged retirement plan, like a traditional <b>IRA</b> (individual retirement account) or a <b>401(k)</b> (an employer retirement plan). It usually went in before tax, so every dollar that comes out is taxable.</li>
+<li><b>Non-qualified</b>: regular after-tax money, like savings or a matured CD. The amount you put in, your <b>cost basis</b>, comes back tax-free. Only the growth is taxed.</li>
+</ul>
+<p class="example">Linda rolls $100,000 from her old 401(k) into an annuity inside an IRA. That's qualified, and all of it plus growth is taxable as she takes it out. Her sister puts $100,000 from savings into an annuity. That's non-qualified, so only her growth is taxable.</p>
+<p>Qualified money also comes with <b>required minimum distributions (RMDs)</b>: the IRS makes you start withdrawing at a set age, currently 73 for most people.</p>
+<p class="aside">An IRA is already tax-deferred. Putting an annuity inside one adds no extra tax benefit. Buy it there for the guarantees or the income, never "for the tax deferral."</p>`},
+ {h:"Withdrawals: gains come out first", b:`
+<p>From a non-qualified deferred annuity, the IRS treats withdrawals as <b>gains first</b>. People call this <b>LIFO</b> (last in, first out): the earnings came in last, so they come out first, and they're taxable. Once the gains are used up, you're getting your basis back tax-free.</p>
+<p class="example">Linda's non-qualified annuity: $100,000 basis, now worth $130,000. So $30,000 is gain.<br>She takes $20,000. All $20,000 is taxable.<br>Next year she takes $15,000. $10,000 is taxable (the rest of the gain) and $5,000 is tax-free basis.</p>
+<p>Annuitizing works differently. Each payment is split into gain and return of basis using an <b>exclusion ratio</b>.</p>
+<p class="example">Linda's basis is $100,000, and her payments are expected to total $160,000. $100,000 ÷ $160,000 = 62.5%. So 62.5% of every check is tax-free and 37.5% is taxable, until she's gotten her whole basis back.</p>`},
+ {h:"The 10% penalty before 59½", b:`
+<p>The IRS wants annuities used for retirement. Take taxable money out before age <b>59½</b> and you usually owe a <b>10% additional tax</b> on the taxable part, on top of regular income tax.</p>
+<p class="example">Sam, 50, pulls $10,000 of gain from his non-qualified annuity. He owes income tax on $10,000, plus a $1,000 penalty.</p>
+<p>There are exceptions. Common ones: the owner dies, the owner becomes disabled, or the money comes out as a series of <b>substantially equal periodic payments</b> over the owner's life. Payments from an immediate annuity are also exempt for non-qualified contracts.</p>
+<p class="aside">The 10% penalty goes to the IRS. The surrender charge goes to the insurer. You can get hit with both at once.</p>`},
+ {h:"1035 exchange: swap without the tax bill", b:`
+<p>Section 1035 of the tax code lets someone trade one policy for another without paying tax on the gain. That's a <b>1035 exchange</b>.</p>
+<ul class="defs">
+<li>Life insurance to life insurance: allowed</li>
+<li>Life insurance to annuity: allowed</li>
+<li>Annuity to annuity: allowed</li>
+<li>Annuity to life insurance: <b>not allowed</b></li>
+</ul>
+<p>Memory trick: you can go from life to annuity, but not back.</p>
+<p>The money has to move straight from the old insurer to the new one. If the owner takes a check and redeposits it, the gain is taxable. And a 1035 doesn't erase surrender charges on the old contract.</p>
+<p class="example">Linda has a 15-year-old annuity with $40,000 of untaxed gain. She does a 1035 into a new annuity. No tax now. Her basis and gain carry over to the new contract.</p>`},
+ {h:"Death and taxes, quickly", b:`
+<p>Life insurance death benefits: generally income-tax-free to the beneficiary.</p>
+<p>Annuity death benefits: the beneficiary pays ordinary income tax on the gain. The original basis comes back tax-free. Annuities don't get a <b>step-up in basis</b> at death the way stocks do. (A step-up resets the taxable starting point to the value at death.)</p>
+<p class="example">Linda's non-qualified annuity has a $100,000 basis and is worth $140,000 when she dies. Jake owes income tax on $40,000.</p>
+<p>A surviving spouse can usually keep the annuity going as the new owner. That's <b>spousal continuation</b>. Other beneficiaries have to take the money out within a set time.</p>`}
+ ],
+ cheat:[
+ "Tax-deferred: no tax on growth until it comes out. Gains are taxed as ordinary income.",
+ "Qualified (IRA, 401(k)): generally all taxable when withdrawn, RMDs start at 73. Non-qualified: only gains are taxable.",
+ "Non-qualified withdrawals: gains first (LIFO). Annuitized payments: exclusion ratio = basis ÷ expected total payout.",
+ "Before 59½: 10% IRS penalty on the taxable part. Exceptions include death, disability, substantially equal periodic payments, immediate annuities.",
+ "1035: life → life, life → annuity, annuity → annuity are OK. Annuity → life is not. Direct transfer only.",
+ "At death: life insurance benefit tax-free. Annuity gain taxable to the beneficiary. No step-up. Spouses can usually continue the contract."
+ ],
+ quiz:[
+ {t:"mc", tag:"Math", q:"Non-qualified annuity: $60,000 basis, now worth $80,000. The owner, 65, withdraws $15,000. How much is taxable?", o:["$15,000","$0","$5,000","$3,750"], why:"Gains come out first. There's $20,000 of gain, so the whole $15,000 is taxable."},
+ {t:"mc", tag:"Math", q:"Same contract, after that withdrawal. The owner takes another $10,000. How much is taxable?", o:["$5,000","$10,000","$0","$2,500"], why:"Only $5,000 of gain was left. The other $5,000 is basis, which comes back tax-free."},
+ {t:"mc", tag:"Scenario", q:"Sam, 52, takes $8,000 of gain from his non-qualified annuity. No exceptions apply. What does he owe the IRS?", o:["Income tax on $8,000 plus an $800 penalty","Income tax only","An $800 penalty only","Nothing until he turns 59½"], why:"Before 59½, the taxable part gets ordinary income tax plus a 10% additional tax: 10% of $8,000 = $800."},
+ {t:"mc", q:"Which 1035 exchange is NOT allowed?", o:["Annuity to life insurance","Life insurance to annuity","Annuity to annuity","Life insurance to life insurance"], why:"You can go from life to annuity, but not back."},
+ {t:"mc", q:"Linda buys an annuity with money from her traditional IRA. What kind of annuity is it?", o:["Qualified","Non-qualified","Variable","Tax-free"], why:"Money from a tax-advantaged retirement plan makes it qualified. Withdrawals are generally fully taxable."},
+ {t:"mc", q:"Why is \"buy this annuity in your IRA for the tax deferral\" a bad pitch?", o:["The IRA is already tax-deferred, so the annuity adds no tax benefit","IRAs can't hold annuities","Annuities in IRAs get taxed twice","It's actually a fine pitch"], why:"Buying an annuity inside an IRA can make sense for guarantees or income. Tax deferral isn't a reason, because the IRA already has it."},
+ {t:"mc", tag:"Math", q:"Basis is $90,000. Annuitized payments are expected to total $150,000. What share of each payment is tax-free?", o:["60%","40%","90%","100%"], why:"Exclusion ratio = $90,000 ÷ $150,000 = 60%. The other 40% of each check is taxable."},
+ {t:"mc", tag:"Scenario", q:"Jake inherits his mom's non-qualified annuity: $100,000 basis, $140,000 value. What's taxable to him?", o:["$40,000 of gain, as ordinary income","Nothing. Death benefits are tax-free","The full $140,000","$40,000, as a capital gain"], why:"Annuity gains are taxable to the beneficiary as ordinary income. Life insurance death benefits are the ones that are generally tax-free."},
+ {t:"match", q:"Match each term to what it means.", pairs:[["Cost basis","What you put in with after-tax money"],["LIFO","Gains come out before basis"],["RMD","Required yearly withdrawals from qualified money"],["1035 exchange","Tax-free swap of one contract for another"]], why:"These four terms cover most annuity tax questions you'll see."}
+ ]
+},
+{
+ id:6, title:"Doing it right", sub:"Best interest, replacements, free look, red flags",
+ cards:[
+ {h:"Best interest: the core rule", b:`
+<p>The NAIC's <b>Suitability in Annuity Transactions Model Regulation</b> was updated in 2020 to a <b>best interest</b> standard. North Carolina's version took effect January 1, 2023.</p>
+<p>The rule in one line: when you recommend an annuity, it has to be in the consumer's best interest, and you can't put your own pay ahead of theirs.</p>
+<p>It breaks into four obligations:</p>
+<ul class="defs">
+<li><b>Care</b>: know the customer's situation, understand the options, and have a reasonable basis that the recommendation fits them.</li>
+<li><b>Disclosure</b>: tell the customer what you're licensed and appointed to sell, and how you get paid (commission, for example).</li>
+<li><b>Conflict of interest</b>: spot conflicts, like a bigger commission on one product, and avoid them or manage and disclose them.</li>
+<li><b>Documentation</b>: write down why you recommended what you did.</li>
+</ul>
+<p class="aside">"Best interest" under this rule isn't the same as being a <b>fiduciary</b> (someone legally required to act solely in the client's interest). It's still a higher bar than the old "suitability" standard.</p>`},
+ {h:"The consumer profile", b:`
+<p>Before recommending anything, you gather the customer's <b>consumer profile</b>. The model rule lists things like:</p>
+<ul class="defs">
+<li>Age, income, and overall financial situation</li>
+<li><b>Liquidity needs</b>: how much cash they may need, and when</li>
+<li>Existing assets, including other annuities and life insurance</li>
+<li>Time horizon, risk tolerance, and tax status</li>
+<li>Goals, and how they plan to use the annuity</li>
+</ul>
+<p class="example">Good fit: Linda, 60, has $40,000 in emergency savings and a pension. She wants guaranteed growth on $100,000 she won't touch for 7 years.</p>
+<p class="example">Bad fit: Ray, 82, wants to put all $150,000 of his savings into a product with a 10-year surrender period. He needs a new roof next spring.</p>`},
+ {h:"Replacement: handle with care", b:`
+<p>A <b>replacement</b> is when someone buys a new policy or annuity and an existing one gets cashed out, lapsed, or reduced as part of the deal. A 1035 exchange is usually a replacement.</p>
+<p>Replacements can make sense. They can also hurt: a fresh surrender period, lost benefits, new charges. So the rules add steps. In NC, the agent has to flag the replacement on the application and give the customer a replacement notice. The new insurer notifies the existing insurer. And the customer gets a longer free look, 30 days, on the new contract.</p>
+<p>Two illegal moves to know by name:</p>
+<ul class="defs">
+<li><b>Twisting</b>: talking someone into replacing a policy with misleading or incomplete comparisons.</li>
+<li><b>Churning</b>: replacing policies over and over, mainly to generate new commissions.</li>
+</ul>`},
+ {h:"Free look", b:`
+<p>The <b>free look period</b> is a window after the contract is delivered when the owner can return it for a refund. No reason needed.</p>
+<p>In NC it's at least 10 days for a new life policy or annuity, and 30 days for a replacement. Carriers can offer longer, and the contract states its exact period.</p>
+<p class="example">Linda's annuity arrives March 1. On March 8 she changes her mind. She sends it back and gets her premium back.</p>
+<p class="aside">For variable or market-value-adjusted contracts, the refund can be the account value plus fees instead of the exact premium.</p>`},
+ {h:"Training and the rules of the road", b:`
+<p>The best-interest rule also requires training. Before you sell annuities in NC, you take a <b>one-time 4-hour annuity training course</b> covering annuity types, features, and the best-interest rules. The insurer has to verify you've done it before you sell its annuities.</p>
+<p>Each carrier also requires <b>product-specific training</b> on its own annuities. And once licensed, you'll need <b>continuing education (CE)</b> to keep your license active.</p>
+<p>The NC exam also tests unfair trade practices. Know these by name:</p>
+<ul class="defs">
+<li><b>Misrepresentation</b>: misstating a policy's terms, benefits, or dividends.</li>
+<li><b>Rebating</b>: giving the customer part of your commission, or anything of value not in the contract, to get them to buy. Generally illegal in NC, with narrow exceptions written into the law.</li>
+<li><b>Defamation</b>: making false statements to hurt another insurer or agent.</li>
+<li><b>Unfair discrimination</b>: charging people in the same risk class different rates or benefits.</li>
+</ul>`},
+ {h:"Red flags", b:`
+<p>Stop and rethink when you see:</p>
+<ul class="defs">
+<li>The customer needs the money soon (a house, medical bills, a business) and the product locks it up for years.</li>
+<li>Nearly all their savings would go into one annuity, leaving no emergency fund.</li>
+<li>An older buyer, and a surrender period longer than their realistic time horizon.</li>
+<li>A replacement that restarts surrender charges for a small gain, or gives up a benefit they already have.</li>
+<li>"Buy it in your IRA for the tax deferral."</li>
+<li>The customer can't explain back how the product works.</li>
+<li>The pitch leans on the bonus, the commission, or urgency ("rates drop Friday!").</li>
+</ul>
+<p>A gut check that works: if you'd feel bad explaining the sale to the customer's daughter a year from now, it probably wasn't best interest.</p>`}
+ ],
+ cheat:[
+ "Best interest (NAIC model, NC effective 1/1/2023): care, disclosure, conflict of interest, documentation.",
+ "Never put your compensation ahead of the customer's interest. Best interest isn't a fiduciary standard.",
+ "Consumer profile: age, income, liquidity needs, existing assets, time horizon, risk tolerance, tax status, goals.",
+ "Replacement = new contract funded by ending or reducing an old one. Replacement notice, existing insurer notified, 30-day free look in NC.",
+ "Twisting = misleading replacement. Churning = replacing for commissions. Rebating = giving value to induce a sale. Also: misrepresentation, defamation, unfair discrimination.",
+ "Free look in NC: at least 10 days; 30 for replacements.",
+ "One-time 4-hour annuity training + carrier product training before selling. CE to keep the license."
+ ],
+ quiz:[
+ {t:"mc", q:"Which is NOT one of the four best-interest obligations?", o:["Guarantee the best possible return","Care","Disclosure","Documentation"], why:"The four are care, disclosure, conflict of interest, and documentation. Nobody can promise the best return."},
+ {t:"mc", tag:"Scenario", q:"Ray, 82, needs $30,000 for a roof next spring. He wants to put his entire $150,000 into an FIA with a 10-year surrender period. What should you do?", o:["Recommend against it as structured. His liquidity need and age don't fit","Sell it. The 10% free withdrawal covers the roof","Sell it. FIAs can't lose money","Split it into two FIAs to double the free withdrawals"], why:"A 10% free withdrawal is only $15,000, and the plan locks up all his savings for 10 years. That fails best interest."},
+ {t:"mc", q:"In NC, what's the free look period on an annuity bought as a replacement?", o:["30 days","10 days","3 days","1 year"], why:"NC's replacement rule gives 30 days. A regular new contract gets at least 10."},
+ {t:"mc", tag:"Scenario", q:"An agent gets a client to swap annuities by hiding the surrender charge the client will pay. What's that called?", o:["Twisting","Rebating","Churning","Defamation"], why:"Twisting means using misleading or incomplete comparisons to get someone to replace a policy."},
+ {t:"mc", tag:"Scenario", q:"An agent offers to pay a customer's rent for a month if they buy an annuity. What's that?", o:["Rebating","Twisting","Churning","Fair dealing"], why:"Giving something of value that isn't in the contract to get a sale is rebating, an unfair trade practice in NC."},
+ {t:"mc", q:"When does Austin have to finish the 4-hour annuity training?", o:["Before selling any annuity","Within a year after his first sale","Before taking the Life exam","Only if he sells variable annuities"], why:"It's a one-time requirement before you sell, solicit, or negotiate annuities. The insurer checks for it."},
+ {t:"mc", q:"Which information belongs in the consumer profile?", o:["Liquidity needs and time horizon","The customer's favorite carrier logo","The agent's commission target","Only the customer's age"], why:"The profile covers the customer's finances, liquidity needs, time horizon, risk tolerance, tax status, and goals."},
+ {t:"match", q:"Match each best-interest obligation to what it requires.", pairs:[["Care","Know the customer and have a reasonable basis"],["Disclosure","Explain what you sell and how you're paid"],["Conflict of interest","Identify and avoid or manage conflicts"],["Documentation","Write down why you recommended it"]], why:"Care, disclosure, conflict of interest, documentation. Memorize all four."}
+ ]
+}
+];
+
+const FINAL_EXTRA = [
+ {t:"mc", tag:"Scenario", q:"Linda, 63, wants to move an old annuity into a new FIA without paying tax now. What tool does that, and what extra NC protection applies?", o:["A 1035 exchange, plus a 30-day free look because it's a replacement","A rollover, plus a 10-day free look","A 1035 exchange, with no free look","Surrender and repurchase, plus a 30-day free look"], why:"A direct 1035 exchange avoids tax on the gain. Because an existing contract is being replaced, NC gives a 30-day free look."},
+ {t:"mc", q:"Which pairing is right?", o:["Life insurance: dying too soon. Annuity: living too long.","Life insurance: living too long. Annuity: dying too soon.","Both protect against market crashes","Both are securities"], why:"That's the one-sentence version of this whole course."},
+ {t:"mc", tag:"Math", q:"An FIA has a 10% cap and 0% floor. Index returns for 3 years: +15%, -8%, +4%. Starting at $100,000, what's the value after year 3?", o:["$114,400","$110,400","$111,000","$100,000"], why:"Year 1: capped at 10%, so $110,000. Year 2: floor, so $110,000. Year 3: 4%, so $114,400."},
+ {t:"mc", q:"Before selling a specific carrier's annuity, Austin must be appointed by whom?", o:["The carrier that issues it","His IMO","NIPR","The NAIC"], why:"Appointments come from the carrier. The IMO usually handles the paperwork, but the carrier does the appointing."},
+ {t:"mc", tag:"Scenario", q:"A client, 55, withdraws $5,000 more than the free withdrawal amount in year 2 of a non-qualified FIA with plenty of gain. Which costs can apply?", o:["Surrender charge, income tax, and the 10% IRS penalty","Income tax only","Surrender charge only","None. FIAs are tax-free"], why:"The excess gets the insurer's surrender charge. Gain comes out first, so it's taxable, and she's under 59½, so the 10% penalty applies too."},
+ {t:"mc", q:"Which statement about the NC Life Agent exam is right?", o:["About 5 of the 55 scored questions are on annuities; most cover life insurance and NC law","It's almost all annuity questions","It requires a 40-hour prelicense course","FINRA administers it"], why:"Pearson VUE's NC Life outline puts 5 questions on annuities. Life products, policy provisions, other life topics, and NC statutes make up the other 50."}
+];
+const GLOSSARY = [
+ ["Risk","The chance that something bad and expensive happens.",0],
+ ["Pooling risk","Many people pay in so the few who suffer a loss get paid. The core idea of insurance.",0],
+ ["Premium","The money you pay an insurer for a policy or annuity.",0],
+ ["Policy","The written insurance contract. Says what's covered and what the insurer must pay.",0],
+ ["Insurer (carrier)","The insurance company. Issues policies, holds the money, pays claims, backs guarantees.",0],
+ ["Claim","A request for the insurer to pay what the policy promises.",0],
+ ["Producer","The legal term for a licensed insurance agent: someone who sells, solicits, or negotiates insurance.",0],
+ ["Policyholder","The person who owns the policy. Usually the same as the owner.",0],
+ ["IMO / FMO","Independent or field marketing organization. A wholesaler between carriers and agents that handles contracting, training, and marketing.",0],
+ ["BGA","Brokerage general agency. A middle layer between carriers and agents, common in life insurance.",0],
+ ["Override","Extra compensation a carrier pays an IMO or agency on business its agents write.",0],
+ ["Department of Insurance (DOI)","The state agency that licenses producers, reviews products, and handles complaints. In NC: NCDOI.",0],
+ ["Commissioner of Insurance","The head of a state's DOI. In NC, an elected official.",0],
+ ["NAIC","National Association of Insurance Commissioners. The group of state regulators that writes model laws.",0],
+ ["Model law","A sample law written by the NAIC that states can adopt, sometimes with changes.",0],
+ ["NIPR","National Insurance Producer Registry. Runs the online system for producer license applications and renewals.",0],
+ ["NPN","National Producer Number. Your unique producer ID across all states.",0],
+ ["Line of authority (LOA)","The type of insurance your license covers, like Life or Accident & Health.",0],
+ ["Appointment","A carrier's official authorization for a producer to sell its products, filed with the state.",0],
+ ["Pearson VUE","The testing company that runs NC insurance licensing exams.",0],
+ ["Prelicense education","A course taken before the exam. Optional in NC since Oct 1, 2025.",0],
+ ["Owner","The person who controls a policy or annuity: pays, names beneficiaries, makes changes.",1],
+ ["Insured","The person whose life a life insurance policy covers.",1],
+ ["Beneficiary","The person or entity that receives the money when the insured (or annuity owner/annuitant) dies.",1],
+ ["Primary beneficiary","First in line to receive the death benefit.",1],
+ ["Contingent beneficiary","Receives the death benefit only if the primary beneficiary has already died.",1],
+ ["Estate","Everything a person leaves behind at death. Gets the death benefit if no beneficiary is named or alive.",1],
+ ["Insurable interest","A real reason to want the insured to stay alive (family, financial, business). Must exist when the policy is bought.",1],
+ ["Death benefit (face amount)","What a life policy pays when the insured dies. Generally income-tax-free to beneficiaries.",1],
+ ["Term life","Life insurance for a set period with no cash value. Cheapest per dollar of coverage.",1],
+ ["Renewable","A term feature: extend coverage without new medical underwriting, at a higher premium.",1],
+ ["Convertible","A term feature: switch to permanent insurance without proving insurability.",1],
+ ["Permanent life insurance","Coverage meant to last for life, with cash value. Includes whole life and universal life.",1],
+ ["Cash value","The savings part of a permanent policy. Grows tax-deferred and can be borrowed against.",1],
+ ["Policy loan","Borrowing from the insurer using a policy's cash value as collateral.",1],
+ ["Whole life","Permanent insurance with a fixed premium, guaranteed death benefit, and guaranteed cash value.",1],
+ ["Dividend (life insurance)","A non-guaranteed return of extra premium paid on participating policies.",1],
+ ["Universal life (UL)","Flexible permanent insurance. Adjustable premiums and death benefit; cash value earns interest.",1],
+ ["Indexed universal life (IUL)","Universal life whose cash value interest is linked to a market index, with a floor.",1],
+ ["Variable universal life (VUL)","Universal life with cash value invested in subaccounts. A security.",1],
+ ["Underwriting","How an insurer decides whether to accept a risk and what to charge.",1],
+ ["Free look","A window after delivery when the owner can return a policy or annuity for a refund. NC: at least 10 days; 30 for replacements.",1],
+ ["Grace period","Extra time, usually 30 or 31 days, to pay a late premium while coverage continues.",1],
+ ["Lapse","When a policy ends because premiums weren't paid.",1],
+ ["Incontestable clause","After 2 years in force, the insurer generally can't void the policy over application misstatements.",1],
+ ["Suicide clause","If the insured dies by suicide within a set period (usually 2 years), premiums are refunded instead of the death benefit being paid.",1],
+ ["Rider","An add-on that changes or adds benefits to a policy or annuity, often at extra cost.",1],
+ ["Annuity","A contract with an insurer: you pay premium; it promises growth, income, or both, possibly for life.",2],
+ ["Longevity risk","The risk of living longer than your money lasts.",2],
+ ["Annuitant","The person whose life an annuity's payments are based on.",2],
+ ["Accumulation phase","The period when annuity money grows tax-deferred before payouts.",2],
+ ["Annuitization","Turning an annuity's value into a stream of payments. Usually irreversible.",2],
+ ["Payout phase","The period when an annuity pays out income. Also called the annuity period.",2],
+ ["Immediate annuity","An annuity whose payments start within one year of purchase. Always single premium.",2],
+ ["Deferred annuity","An annuity that grows first and pays out later.",2],
+ ["SPIA","Single premium immediate annuity.",2],
+ ["SPDA","Single premium deferred annuity.",2],
+ ["FPDA","Flexible premium deferred annuity.",2],
+ ["Single premium","Paying for an annuity with one lump sum.",2],
+ ["Flexible premium","Paying into an annuity over time in varying amounts.",2],
+ ["Life only (straight life)","Payout option that pays for the annuitant's life and stops at death. Highest payment.",2],
+ ["Life with period certain","Pays for life, with a minimum number of years guaranteed to the beneficiary.",2],
+ ["Refund option","Pays for life; if the annuitant dies early, the beneficiary gets the unpaid premium back (cash or installments).",2],
+ ["Joint and survivor","Payout option covering two lives. Continues until the second person dies, sometimes at a reduced amount.",2],
+ ["Period certain","Payout option that pays for a fixed number of years, not tied to anyone's life.",2],
+ ["Fixed annuity","An annuity that credits an insurer-declared interest rate with a guaranteed minimum.",3],
+ ["Guaranteed minimum rate","The lowest interest rate a fixed contract can ever credit.",3],
+ ["Principal","The money originally put in.",3],
+ ["MYGA","Multi-year guaranteed annuity. A fixed annuity that locks one rate for a set number of years.",3],
+ ["Fixed indexed annuity (FIA)","A fixed annuity whose interest is linked to a market index, with a floor (usually 0%) and limits on gains.",3],
+ ["Index","A measure that tracks a group of stocks, like the S&P 500. FIAs use it to calculate interest.",3],
+ ["Floor","The minimum an FIA credits in a period, usually 0%. Index losses don't reduce the account.",3],
+ ["Crediting period","How often FIA interest is calculated and credited, usually one year.",3],
+ ["Annual point-to-point","FIA method comparing the index value at the start and end of a one-year period.",3],
+ ["Cap","The maximum interest an FIA can credit in a period.",3],
+ ["Participation rate","The percentage of the index gain credited to an FIA.",3],
+ ["Spread (margin)","A percentage subtracted from the index gain before crediting.",3],
+ ["Variable annuity","An annuity invested in subaccounts. Value can drop. A security that needs a Variable LOA and FINRA registration.",3],
+ ["Subaccount","An investment fund option inside a variable annuity, similar to a mutual fund.",3],
+ ["Security","An investment where the buyer carries the risk, regulated by the SEC and FINRA. Variable annuities and RILAs qualify.",3],
+ ["FINRA","Financial Industry Regulatory Authority. Regulates broker-dealers and licenses securities reps.",3],
+ ["Prospectus","The legal disclosure document for a security, like a variable annuity.",3],
+ ["RILA","Registered index-linked annuity. Index-based like an FIA but with limited downside protection, so it's a security.",3],
+ ["Surrender period","The years during which early withdrawals above the free amount trigger a surrender charge.",4],
+ ["Surrender charge","A fee for withdrawing more than allowed during the surrender period. Usually declines yearly.",4],
+ ["Market value adjustment (MVA)","An adjustment to early withdrawals based on interest rate changes since purchase. Can go up or down.",4],
+ ["Free withdrawal","The amount you can withdraw each year without a surrender charge, often 10%.",4],
+ ["Income rider","An optional benefit guaranteeing lifetime withdrawals without annuitizing.",4],
+ ["GLWB","Guaranteed lifetime withdrawal benefit. A common income rider: set withdrawals for life even if the account hits zero.",4],
+ ["Benefit base","The number an income rider uses to calculate payments. Not cash you can withdraw in a lump sum.",4],
+ ["Account value","The real money in the annuity: premiums plus credited interest, minus withdrawals and fees.",4],
+ ["Enhanced death benefit","A rider that pays beneficiaries more than the account value.",4],
+ ["M&E charge","Mortality and expense risk charge. A common yearly fee in variable annuities.",4],
+ ["Premium bonus","Extra money an insurer adds to a deposit. Often paired with longer surrender periods or lower caps.",4],
+ ["Vesting","When a bonus or benefit becomes fully yours over time.",4],
+ ["Claims-paying ability","The insurer's financial ability to meet its obligations. What annuity guarantees rest on.",4],
+ ["Financial strength rating","A grade of an insurer's financial health from agencies like AM Best, S&P, Moody's, or Fitch.",4],
+ ["Guaranty association","A state safety net that covers policyholders, up to legal limits, if an insurer fails. Can't be used in sales pitches.",4],
+ ["Nursing home waiver","A contract feature that waives surrender charges if the owner is confined to a nursing home. Varies by contract.",4],
+ ["Tax-deferred","No tax on growth until money is withdrawn.",5],
+ ["Ordinary income","Income taxed at regular rates, like wages. Annuity gains are taxed this way.",5],
+ ["Qualified annuity","An annuity funded with pre-tax retirement plan money, like an IRA or 401(k). Withdrawals are generally fully taxable.",5],
+ ["Non-qualified annuity","An annuity bought with after-tax money. Only the gain is taxable.",5],
+ ["Cost basis","The after-tax money put into a contract. Comes back tax-free.",5],
+ ["IRA","Individual retirement account. A tax-advantaged personal retirement account.",5],
+ ["401(k)","An employer-sponsored retirement plan funded with payroll contributions.",5],
+ ["RMD","Required minimum distribution. Yearly withdrawals the IRS requires from qualified accounts, currently starting at 73 for most people.",5],
+ ["LIFO (gains first)","For non-qualified deferred annuities, withdrawals come from gains first (taxable), then basis.",5],
+ ["Exclusion ratio","The tax-free share of each annuitized payment: basis ÷ expected total payout.",5],
+ ["10% additional tax","IRS penalty on the taxable part of withdrawals before age 59½, unless an exception applies.",5],
+ ["Substantially equal periodic payments","A series of regular payments based on life expectancy. An exception to the 10% early withdrawal penalty.",5],
+ ["1035 exchange","A tax-free swap of life insurance or annuity contracts under IRC Section 1035. Annuity to life isn't allowed.",5],
+ ["Step-up in basis","Resetting the taxable starting point to the value at death. Annuities don't get one.",5],
+ ["Spousal continuation","A surviving spouse keeping an annuity going as the new owner instead of cashing out.",5],
+ ["Best interest standard","The NAIC annuity rule: recommendations must be in the consumer's best interest, without putting the producer's pay first.",6],
+ ["Suitability in Annuity Transactions Model Regulation","The NAIC model rule (#275) behind annuity best-interest requirements. NC's version took effect Jan 1, 2023.",6],
+ ["Care obligation","Know the customer, understand the options, and have a reasonable basis for the recommendation.",6],
+ ["Disclosure obligation","Tell the customer what you can sell and how you're paid.",6],
+ ["Conflict of interest obligation","Identify conflicts and avoid them, or manage and disclose them.",6],
+ ["Documentation obligation","Record the basis for a recommendation in writing.",6],
+ ["Consumer profile","Customer information gathered before a recommendation: finances, liquidity needs, time horizon, risk tolerance, goals, and more.",6],
+ ["Liquidity","How easily money can be accessed without big costs.",6],
+ ["Time horizon","How long until the customer needs the money.",6],
+ ["Risk tolerance","How much ups and downs a customer can handle.",6],
+ ["Fiduciary","Someone legally required to act solely in a client's interest. The annuity best-interest rule isn't a fiduciary standard.",6],
+ ["Replacement","Buying a new policy or annuity when an existing one is ended or reduced as part of the deal.",6],
+ ["Twisting","Inducing a replacement through misrepresentation or incomplete comparisons. Illegal.",6],
+ ["Churning","Repeated replacements mainly to generate commissions. Illegal.",6],
+ ["Rebating","Giving a customer part of the commission or anything of value not in the contract to induce a sale. Generally illegal in NC.",6],
+ ["Misrepresentation","Misstating a policy's terms, benefits, or dividends. An unfair trade practice.",6],
+ ["Defamation","False statements meant to harm another insurer or producer.",6],
+ ["Unfair discrimination","Treating people in the same risk class differently in rates or benefits.",6],
+ ["4-hour annuity training","One-time best-interest annuity course required before selling annuities in NC. Insurers verify it.",6],
+ ["Continuing education (CE)","Ongoing coursework required to keep an insurance license active.",6]
+];
+
+const SOURCES = [
+ ["NC DOI: Producer license coverages chart (fixed and indexed annuities under Life)","https://www.ncdoi.gov/documents/agent-services/north-carolina-producer-license-coverages-chart/open"],
+ ["NC DOI newsletter, Feb 2023 (annuity best interest, 4-hour training)","https://www.ncdoi.gov/documents/agent-services/newsletter/nc-department-insurance-newsletter-february-2023/open"],
+ ["Pearson VUE: NC insurance licensing","https://www.pearsonvue.com/us/en/nc/insurance.html"],
+ ["Pearson VUE NC candidate handbook, with the Life Agent content outline","https://www.pearsonvue.com/content/dam/VUE/vue/en/documents/publications/123400.pdf"],
+ ["NIPR: NC resident licensing requirements","https://nipr.com/licensing-center/state-requirements/north-carolina-resident-licensing-individual"],
+ ["11 NCAC 12 .0612: NC replacement rule (30-day return right)","http://reports.oah.state.nc.us/ncac/title%2011%20-%20insurance/chapter%2012%20-%20life%20and%20health%20division/11%20ncac%2012%20.0612.pdf"],
+ ["N.C.G.S. 58-63-15: Unfair trade practices (twisting, rebating, and more)","https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/BySection/Chapter_58/GS_58-63-15.html"],
+ ["N.C.G.S. 58-62-86: No advertising guaranty association coverage in sales","https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/BySection/Chapter_58/GS_58-62-86.html"],
+ ["NAIC Model #275: Suitability in Annuity Transactions","https://content.naic.org/sites/default/files/model-law-275.pdf"],
+ ["NAIC: Annuities topic page","https://content.naic.org/insurance-topics/annuities"],
+ ["Investor.gov: Annuities","https://www.investor.gov/introduction-investing/investing-basics/investment-products/insurance-products/annuities"],
+ ["Investor.gov: Updated investor bulletin on indexed annuities","https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/updated-investor-bulletin-indexed-annuities"],
+ ["Investor.gov: Variable annuities","https://www.investor.gov/introduction-investing/investing-basics/investment-products/insurance-products/variable-annuities"],
+ ["FINRA: Annuities","https://www.finra.org/investors/investing/investment-products/annuities"],
+ ["IRS Publication 575: Pension and annuity income","https://www.irs.gov/publications/p575"],
+ ["IRS Publication 939: General rule for pensions and annuities (exclusion ratio)","https://www.irs.gov/publications/p939"],
+ ["IRS Topic 558: Additional tax on early distributions","https://www.irs.gov/taxtopics/tc558"],
+ ["IRS: Required minimum distribution FAQs","https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs"],
+ ["26 U.S.C. 72: Annuity taxation, including the 10% additional tax in 72(q)","https://www.law.cornell.edu/uscode/text/26/72"],
+ ["26 U.S.C. 1035: Tax-free exchanges","https://www.law.cornell.edu/uscode/text/26/1035"],
+ ["NOLHGA: State life and health guaranty associations","https://www.nolhga.com/"]
+];
+
+/* ---------- BRIDGE CONTENT ---------- */
+const OUTLINE = [
+ ["I. Types of individual life insurance", 17, "Term, whole life, endowment, premium types, combination policies, universal life", "Level 1"],
+ ["II. Annuities", 5, "Annuity principle, single vs installment premium, fixed / variable / equity-indexed, immediate vs deferred, joint and survivor, payout guarantees", "Levels 2 and 3"],
+ ["III. Policy provisions, options, other features", 11, "Free look, grace period, incontestable, suicide, beneficiaries, nonforfeiture, loans, dividends, settlement options, riders", "Level 1 (basics), Level 4 (riders)"],
+ ["IV. Other life topics", 8, "Group life, IRAs / 401(k) / TSAs, business uses, Social Security, federal taxation of life and annuities, legal concepts, contract formation, variable products and FINRA", "Levels 3 and 5"],
+ ["V. NC statutes and regulations (life)", 14, "Commissioner's powers, licensing, unfair trade practices, replacement rules, ethics, guaranty association, CE", "Levels 0, 4, 6"]
+];
+
+/* ---------- STATE ---------- */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+const KEY = "annuityBasics.v1";
+const PASS = 70;
+const PRAISE = ["Correct.","Yep, that's it.","Nailed it.","Right."];
+const OOPS = ["Not quite.","Close, but no.","Nope."];
+function defaults(){ return {xp:0, levels:{}, final:null, known:{}, kx:{}, day:{count:0,last:null}, bestCombo:0}; }
+function load(){ try{ const raw = localStorage.getItem(KEY); return raw ? Object.assign(defaults(), JSON.parse(raw)) : defaults(); } catch(e){ return defaults(); } }
+let S = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} updateChips(); }
+function blankRec(){ return {best:0, bestCorrect:0, stars:0, done:false, attempts:0, cardMax:-1}; }
+function lv(id){ return S.levels[id] || (S.levels[id] = blankRec()); }
+function ymd(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function yesterday(){ const d = new Date(); d.setDate(d.getDate()-1); return ymd(d); }
+function touchDay(){ const t = ymd(new Date()); if(S.day.last === t) return; S.day.count = (S.day.last === yesterday()) ? S.day.count+1 : 1; S.day.last = t; save(); }
+function dayStreak(){ if(!S.day.last) return 0; return (S.day.last === ymd(new Date()) || S.day.last === yesterday()) ? S.day.count : 0; }
+function updateChips(){ $("#xpChip").textContent = S.xp+" XP"; const d = dayStreak(); $("#dayChip").textContent = d+" day streak"; }
+function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("show"), 1900); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function starsFor(p){ return p>=100?3 : p>=85?2 : p>=PASS?1 : 0; }
+function starsHtml(n){ let s=""; for(let i=0;i<3;i++) s += i<n ? "★" : '<span class="off">★</span>'; return '<span class="stars" role="img" aria-label="'+n+' of 3 stars">'+s+'</span>'; }
+function allDone(){ return LEVELS.every(l=>lv(l.id).done) && !!(S.final && S.final.done); }
+const FINAL_COUNT = LEVELS.length*2 + FINAL_EXTRA.length;
+
+/* ---------- ROUTER ---------- */
+let view = {name:"home"};
+let Q = null;
+function route(){
+  const h = (location.hash || "#home").slice(1);
+  const m = h.match(/^level-(\d+)$/);
+  if(m && LEVELS[+m[1]]){
+    const id = +m[1];
+    if(!(view.name==="level" && view.id===id)){
+      const L = lv(id);
+      view = {name:"level", id, tab:"learn", card: L.done ? 0 : Math.max(0, Math.min(L.cardMax, LEVELS[id].cards.length-1))};
+      Q = null;
+    }
+  } else if(h==="final"){
+    if(view.name!=="final"){ view = {name:"final"}; Q = null; }
+  } else {
+    view = {name: ["glossary","bridge","about"].includes(h) ? h : "home"};
+  }
+  render();
+  window.scrollTo(0,0);
+}
+function render(){
+  const tab = (view.name==="level"||view.name==="final") ? "home" : view.name;
+  document.querySelectorAll("#tabs a").forEach(a=>{ const on = a.dataset.tab===tab; a.classList.toggle("on", on); if(on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  ({home:renderHome, level:renderLevel, final:renderFinal, glossary:renderGlossary, bridge:renderBridge, about:renderAbout})[view.name]();
+  updateChips();
+}
+
+/* ---------- HOME ---------- */
+function badgeSvg(){ return `<svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true"><defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2c14e"/><stop offset="1" stop-color="#b07800"/></linearGradient></defs><path d="M36 3 64 19v34L36 69 8 53V19z" fill="url(#bg1)"/><path d="M36 11 57 23v26L36 61 15 49V23z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/><path d="M25 37l8 8 15-17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`; }
+function levelTile(l){
+  const L = lv(l.id);
+  const status = L.done ? `<div class="status ok">Passed · best ${L.best}%</div>`
+    : L.attempts ? `<div class="status">Best ${L.best}%. ${PASS}% passes</div>`
+    : L.cardMax>=0 ? `<div class="status">In progress · card ${Math.min(L.cardMax+1,l.cards.length)} of ${l.cards.length}</div>`
+    : `<div class="status">${l.cards.length} cards · ${l.quiz.length} questions</div>`;
+  return `<a class="card lvl ${L.done?"done":""}" href="#level-${l.id}"><span class="num" aria-hidden="true">${L.done?"✓":l.id}</span><div class="grow"><h3>Level ${l.id}: ${esc(l.title)}</h3><p>${esc(l.sub)}</p>${starsHtml(L.stars)}${status}</div></a>`;
+}
+function bossTile(){
+  const F = S.final;
+  const status = F && F.done ? `<div class="status ok">Passed · best ${F.best}%</div>` : F && F.attempts ? `<div class="status">Best ${F.best}%. ${PASS}% passes</div>` : `<div class="status">${FINAL_COUNT} mixed questions. Best after Level 6</div>`;
+  return `<a class="card lvl boss ${F&&F.done?"done":""}" href="#final"><span class="num" aria-hidden="true">★</span><div class="grow"><h3>Final Boss</h3><p>Mixed quiz across every level</p>${starsHtml(F?F.stars:0)}${status}</div></a>`;
+}
+function renderHome(){
+  const done = LEVELS.filter(l=>lv(l.id).done).length;
+  const fdone = !!(S.final && S.final.done);
+  const totalStars = LEVELS.reduce((a,l)=>a+lv(l.id).stars,0) + (S.final ? S.final.stars : 0);
+  const known = GLOSSARY.filter(g=>S.known[g[0]]).length;
+  const pct = Math.round((done + (fdone?1:0)) / (LEVELS.length+1) * 100);
+  const next = LEVELS.find(l=>!lv(l.id).done);
+  const badge = allDone();
+  let cta = "";
+  if(next) cta = `<a class="btn primary grow" href="#level-${next.id}">${lv(next.id).cardMax>=0?"Continue":"Start"} Level ${next.id}: ${esc(next.title)}</a>`;
+  else if(!fdone) cta = `<a class="btn primary grow" href="#final">Take the Final Boss</a>`;
+  else cta = `<a class="btn primary grow" href="#bridge">See what to study next</a>`;
+  app.innerHTML = `
+  <section class="card hero">
+    <h1>Insurance and annuities, from zero</h1>
+    <p class="muted">Seven short levels. Each one has a few cards, a one-screen cheat sheet, and a quiz. The goal: exam prep courses and carrier trainings stop sounding like jargon soup.</p>
+    <div class="row between small"><span>${done} of ${LEVELS.length} levels passed${fdone?" + Final Boss":""}</span><span>${pct}%</span></div>
+    <div class="bar" role="progressbar" aria-label="Course progress" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
+    <div class="stats">
+      <div class="stat"><b>${S.xp}</b><span>XP</span></div>
+      <div class="stat"><b>${totalStars}/${(LEVELS.length+1)*3}</b><span>Stars</span></div>
+      <div class="stat"><b>${known}/${GLOSSARY.length}</b><span>Terms known</span></div>
+    </div>
+    <div class="row" style="margin-top:14px">${cta}</div>
+  </section>
+  <section class="card badge ${badge?"":"locked"}" style="margin-top:12px">${badgeSvg()}<div><h3 style="margin:0 0 4px">${badge?"Foundations complete":"Foundations badge"}</h3><p class="small muted" style="margin:0">${badge?"Every level and the Final Boss passed. Time to open a real exam prep course.":"Pass all 7 levels and the Final Boss at 70% or better to earn it."}</p></div></section>
+  <h2 style="margin:20px 0 10px">Levels</h2>
+  <div class="levels">${LEVELS.map(levelTile).join("")}${bossTile()}</div>
+  <div class="row" style="margin-top:14px"><a class="btn grow" href="#glossary">Flashcards (${GLOSSARY.length} terms)</a><a class="btn grow" href="#bridge">Bridge to exam prep</a></div>`;
+}
+
+/* ---------- LEVEL ---------- */
+function renderLevel(){
+  const l = LEVELS[view.id], L = lv(l.id);
+  const names = {learn:"Learn", cheat:"Cheat sheet", quiz:"Quiz"};
+  const tabs = `<div class="seg" role="tablist">${["learn","cheat","quiz"].map(t=>`<button role="tab" aria-selected="${view.tab===t}" class="${view.tab===t?"on":""}" data-act="tab" data-tab="${t}">${names[t]}</button>`).join("")}</div>`;
+  const body = view.tab==="learn" ? learnHtml(l) : view.tab==="cheat" ? cheatHtml(l) : quizHtml();
+  app.innerHTML = `<a class="crumb" href="#home">← Level map</a>
+  <div class="row between"><div><div class="counter">Level ${l.id}</div><h1 style="margin:0">${esc(l.title)}</h1></div>${starsHtml(L.stars)}</div>
+  ${tabs}<div id="pane">${body}</div>`;
+  if(view.tab==="learn"){ markCard(); bindSwipe(); }
+}
+function learnHtml(l){
+  const i = view.card, c = l.cards[i], n = l.cards.length, last = i===n-1;
+  return `<article class="card lesson" id="lesson"><div class="counter">Card ${i+1} of ${n}</div>
+  <div class="dots" aria-hidden="true">${l.cards.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div>
+  <h2>${esc(c.h)}</h2>${c.b}</article>
+  <div class="navbtns"><button class="btn" data-act="prev" ${i===0?"disabled":""}>← Back</button><button class="btn primary" data-act="next">${last?"Cheat sheet →":"Next →"}</button></div>
+  <p class="hint">Swipe the card or use the ← → keys</p>`;
+}
+function markCard(){ const L = lv(view.id); if(view.card > L.cardMax){ S.xp += 2*(view.card - L.cardMax); L.cardMax = view.card; touchDay(); save(); } }
+function nextCard(){ const n = LEVELS[view.id].cards.length; if(view.card < n-1){ view.card++; } else { view.tab = "cheat"; } render(); scrollToPane(); }
+function prevCard(){ if(view.card>0){ view.card--; render(); scrollToPane(); } }
+function scrollToPane(){ const p = $("#pane"); if(p && p.getBoundingClientRect().top < 0) p.scrollIntoView({block:"start"}); }
+function bindSwipe(){
+  const el = $("#lesson"); if(!el) return;
+  let x0=null, y0=null;
+  el.addEventListener("touchstart", e=>{ x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, {passive:true});
+  el.addEventListener("touchend", e=>{ if(x0===null) return; const dx = e.changedTouches[0].clientX-x0, dy = e.changedTouches[0].clientY-y0; x0=null; if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5){ dx<0 ? nextCard() : prevCard(); } }, {passive:true});
+}
+function cheatHtml(l){
+  return `<section class="card"><h2>Level ${l.id} cheat sheet</h2>${l.cheatHtml||""}<ul class="cheat">${l.cheat.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>
+  <div class="navbtns"><button class="btn" data-act="tab" data-tab="learn">Review cards</button><button class="btn primary" data-act="tab" data-tab="quiz">Take the quiz →</button></div>`;
+}
+
+/* ---------- QUIZ ---------- */
+function prepQ(q){
+  if(q.t==="mc") return Object.assign({}, q, {items: shuffle(q.o.map((t,k)=>({t, ok:k===0}))), picked:null, result:null});
+  return Object.assign({}, q, {defs: shuffle(q.pairs.map(p=>p[1])), sel: q.pairs.map(()=>""), checked:false, result:null});
+}
+function startQuiz(){
+  let qs;
+  if(view.name==="final"){ qs = []; LEVELS.forEach(l=>qs.push(...shuffle(l.quiz).slice(0,2))); qs.push(...FINAL_EXTRA); qs = shuffle(qs); }
+  else qs = LEVELS[view.id].quiz.slice();
+  Q = {final: view.name==="final", qs: qs.map(prepQ), i:0, correct:0, combo:0, maxCombo:0, done:false, missed:[]};
+}
+function quizHtml(){
+  const isF = view.name==="final";
+  if(!Q){
+    const n = isF ? FINAL_COUNT : LEVELS[view.id].quiz.length;
+    const rec = isF ? S.final : lv(view.id);
+    return `<section class="card stack"><h2 style="margin:0">${isF?"Final Boss":"Quiz"}: ${n} questions</h2>
+    <p>${isF?"Two random questions from every level, plus six that mix topics. ":""}Instant feedback and a short "why" after every answer, right or wrong. Score ${PASS}% to pass, the same bar as the real exam's scaled 70. 85% earns 2 stars, 100% earns 3.</p>
+    ${rec && rec.attempts ? `<p class="muted small">Your best so far: ${rec.best}%.</p>` : ""}
+    <button class="btn primary" data-act="start">Start ${isF?"the Final Boss":"the quiz"}</button></section>`;
+  }
+  if(Q.done) return resultHtml();
+  const q = Q.qs[Q.i], n = Q.qs.length;
+  const answered = q.result !== null;
+  let inner = "";
+  if(q.t==="mc"){
+    inner = `<div class="opts">${q.items.map((it,k)=>{ let cls = "opt"; if(answered){ if(it.ok) cls += " right"; else if(k===q.picked) cls += " wrong"; }
+      return `<button class="${cls}" data-act="pick" data-k="${k}" ${answered?"disabled":""}><span class="k">${"ABCD"[k]}</span>${esc(it.t)}</button>`; }).join("")}</div>`;
+  } else {
+    inner = `<div class="match">${q.pairs.map((p,r)=>{ let cls = "mrow", fix = "";
+      if(q.checked){ const ok = q.sel[r]===p[1]; cls += ok ? " right" : " wrong"; if(!ok) fix = `<span class="fix">Answer: ${esc(p[1])}</span>`; }
+      return `<div class="${cls}"><b id="mt${r}">${esc(p[0])}</b><select data-row="${r}" aria-labelledby="mt${r}" ${q.checked?"disabled":""}><option value="">Choose a match...</option>${q.defs.map(d=>`<option value="${esc(d)}" ${q.sel[r]===d?"selected":""}>${esc(d)}</option>`).join("")}</select>${fix}</div>`; }).join("")}</div>
+      ${q.checked ? "" : `<div class="row end" style="margin-top:12px"><button class="btn primary" data-act="check" ${q.sel.every(Boolean)?"":"disabled"}>Check answers</button></div>`}`;
+  }
+  const fb = answered ? `<div class="fb ${q.result?"right":"wrong"}" role="status"><strong>${esc(q.head)}</strong>${esc(q.why)}</div>
+    <div class="row end" style="margin-top:12px"><button class="btn primary" data-act="nextq" id="nextq">${Q.i===n-1?"See results":"Next question →"}</button></div>` : "";
+  return `<section class="card" id="qcard"><div class="qhead"><span>Question ${Q.i+1} of ${n}</span><span class="combo">${Q.combo>=2?Q.combo+" in a row":""}</span></div>
+  <div class="bar" style="height:6px"><i style="width:${(Q.i/n)*100}%"></i></div>
+  <div class="qtype" style="margin-top:12px">${q.t==="match"?"Match the terms":(q.tag||"Multiple choice")}</div>
+  <div class="qtext">${esc(q.q)}</div>${inner}${fb}</section>`;
+}
+function answer(ok){
+  const q = Q.qs[Q.i];
+  q.result = ok; q.head = ok ? pick(PRAISE) : pick(OOPS);
+  if(ok){ Q.correct++; Q.combo++; Q.maxCombo = Math.max(Q.maxCombo, Q.combo); if([3,5,8,12].includes(Q.combo)) toast(Q.combo+" in a row"); }
+  else { Q.combo = 0; Q.missed.push(q); }
+  touchDay(); render();
+  const nb = $("#nextq"); if(nb){ nb.focus({preventScroll:true}); const fb = $(".fb"); if(fb) fb.scrollIntoView({block:"nearest"}); }
+}
+function finishQuiz(){
+  Q.done = true;
+  const n = Q.qs.length, pct = Math.round(Q.correct/n*100), stars = starsFor(pct);
+  let rec; if(Q.final){ S.final = S.final || blankRec(); rec = S.final; } else rec = lv(view.id);
+  const wasDone = rec.done;
+  let gain = Math.max(0, Q.correct - rec.bestCorrect) * 10;
+  rec.attempts++; rec.best = Math.max(rec.best, pct); rec.bestCorrect = Math.max(rec.bestCorrect, Q.correct); rec.stars = Math.max(rec.stars, stars);
+  if(pct >= PASS) rec.done = true;
+  Q.newPass = !wasDone && rec.done;
+  if(Q.newPass) gain += Q.final ? 100 : 50;
+  S.bestCombo = Math.max(S.bestCombo, Q.maxCombo);
+  S.xp += gain; Q.pct = pct; Q.stars = stars; Q.gain = gain;
+  save();
+  if(gain) toast("+"+gain+" XP");
+  if(Q.newPass && allDone()) setTimeout(()=>toast("Badge earned: Foundations complete"), 2000);
+}
+function resultHtml(){
+  const pass = Q.pct >= PASS, isF = Q.final;
+  const lastLevel = !isF && view.id === LEVELS.length-1;
+  const nextL = !isF && !lastLevel ? LEVELS[view.id+1] : null;
+  let primary = `<a class="btn primary" href="#home">Level map</a>`;
+  if(pass && nextL) primary = `<a class="btn primary" href="#level-${nextL.id}">Level ${nextL.id} →</a>`;
+  else if(pass && lastLevel) primary = `<a class="btn primary" href="#final">Final Boss →</a>`;
+  else if(pass && isF) primary = `<a class="btn primary" href="#bridge">What to study next →</a>`;
+  const msg = pass ? (Q.pct===100 ? "Perfect score." : "Passed.") : `${PASS}% passes. Skim the cheat sheet and run it again.`;
+  return `<section class="card result stack"><div class="big">${Q.pct}%</div><div>${starsHtml(Q.stars)}</div>
+  <p><b>${Q.correct} of ${Q.qs.length} correct.</b> ${msg}</p>
+  <p class="muted small">+${Q.gain} XP${Q.gain===0?" (XP only counts when you beat your best score)":""} · Longest streak this round: ${Q.maxCombo}</p>
+  ${Q.missed.length ? `<div class="missed"><h3>Review what you missed</h3><ul>${Q.missed.map(q=>`<li><b>${esc(q.q)}</b><br>${q.t==="mc" ? "Answer: "+esc(q.o[0])+". " : "Answers: "+q.pairs.map(p=>esc(p[0])+" = "+esc(p[1])).join("; ")+". "}<span class="muted">${esc(q.why)}</span></li>`).join("")}</ul></div>` : ""}
+  <div class="row" style="justify-content:center"><button class="btn" data-act="retry">Retry</button>${isF?"":`<button class="btn" data-act="tab" data-tab="cheat">Cheat sheet</button>`}${primary}</div></section>`;
+}
+function renderFinal(){
+  const F = S.final;
+  app.innerHTML = `<a class="crumb" href="#home">← Level map</a>
+  <div class="row between"><div><div class="counter">Mixed review</div><h1 style="margin:0">Final Boss</h1></div>${starsHtml(F?F.stars:0)}</div>
+  <div id="pane" style="margin-top:14px">${quizHtml()}</div>`;
+}
+
+/* ---------- GLOSSARY ---------- */
+const gl = {q:"", filter:"all", level:"all", mode:"grid", flipped:{}, deck:[], di:0, dflip:false};
+function glItems(){
+  const q = gl.q.trim().toLowerCase();
+  let items = GLOSSARY.map((g,i)=>({term:g[0], def:g[1], lvl:g[2], i})).filter(x=>
+    (gl.level==="all" || x.lvl===+gl.level) &&
+    (gl.filter==="all" || (gl.filter==="known" ? !!S.known[x.term] : !S.known[x.term])) &&
+    (!q || x.term.toLowerCase().includes(q) || x.def.toLowerCase().includes(q)));
+  if(q) items.sort((a,b)=> (b.term.toLowerCase().includes(q)) - (a.term.toLowerCase().includes(q)));
+  return items;
+}
+function renderGlossary(){
+  const known = GLOSSARY.filter(g=>S.known[g[0]]).length;
+  const chip = (k,v,label)=>`<button class="fchip ${gl[k]===v?"on":""}" data-act="glset" data-k="${k}" data-v="${v}">${label}</button>`;
+  app.innerHTML = `<div class="row between"><h1 style="margin:0">Flashcards</h1><span class="small muted" id="glcount">${known} of ${GLOSSARY.length} known</span></div>
+  <p class="muted small" style="margin-top:6px">Every term defined in the course. Tap a card to flip it. Mark the ones you've got.</p>
+  <input class="search" id="glq" type="search" placeholder="Search terms or definitions" aria-label="Search glossary" value="${esc(gl.q)}">
+  <div class="filters">${chip("filter","all","All")}${chip("filter","learn","Still learning")}${chip("filter","known","Known")}</div>
+  <div class="filters">${chip("level","all","All levels")}${LEVELS.map(l=>chip("level",String(l.id),"L"+l.id)).join("")}</div>
+  <div class="seg" style="margin-top:4px"><button class="${gl.mode==="grid"?"on":""}" data-act="glmode" data-v="grid">Browse</button><button class="${gl.mode==="drill"?"on":""}" data-act="glmode" data-v="drill">Drill one at a time</button></div>
+  <div id="gllist"></div>`;
+  $("#glq").addEventListener("input", e=>{ gl.q = e.target.value; if(gl.mode==="drill") newDeck(); fillGlossary(); });
+  if(gl.mode==="drill" && !gl.deck.length) newDeck();
+  fillGlossary();
+}
+function newDeck(){ gl.deck = shuffle(glItems()); gl.di = 0; gl.dflip = false; }
+function fillGlossary(){
+  const box = $("#gllist"); if(!box) return;
+  const known = GLOSSARY.filter(g=>S.known[g[0]]).length;
+  $("#glcount").textContent = known+" of "+GLOSSARY.length+" known";
+  if(gl.mode==="grid"){
+    const items = glItems();
+    if(!items.length){ box.innerHTML = `<div class="empty">No terms match. Try another search or filter.</div>`; return; }
+    box.innerHTML = `<p class="small muted">${items.length} term${items.length===1?"":"s"}</p><div class="glist">${items.map(cardHtml).join("")}</div>`;
+  } else {
+    const d = gl.deck;
+    if(!d.length){ box.innerHTML = `<div class="empty">No cards in this deck. Change the filter above.</div>`; return; }
+    if(gl.di >= d.length){ box.innerHTML = `<div class="card empty"><h3>Deck done</h3><p>You went through ${d.length} card${d.length===1?"":"s"}.</p><button class="btn primary" data-act="redeck">Shuffle and go again</button></div>`; return; }
+    const x = d[gl.di], k = !!S.known[x.term];
+    box.innerHTML = `<p class="small muted">Card ${gl.di+1} of ${d.length}</p>
+    <div class="drill"><div class="flip ${gl.dflip?"on":""}" tabindex="0" role="button" aria-label="Flashcard: ${esc(x.term)}. Press to flip." data-act="dflip"><div class="flip-in">
+      <div class="face front"><span class="tag" style="align-self:flex-start">Level ${x.lvl}</span><div class="term">${esc(x.term)}</div><div class="meta"><span>Tap to see the definition</span>${k?'<span class="kdot">✓ Known</span>':""}</div></div>
+      <div class="face back"><div class="def">${esc(x.def)}</div><div class="meta"><span class="tag">${esc(x.term)}</span></div></div>
+    </div></div></div>
+    <div class="navbtns"><button class="btn" data-act="dnext">Still learning</button><button class="btn primary" data-act="dgot">Got it ✓</button></div>`;
+  }
+}
+function cardHtml(x){
+  const k = !!S.known[x.term], f = !!gl.flipped[x.i];
+  return `<div class="flip ${f?"on":""}" tabindex="0" role="button" aria-label="${esc(x.term)}. Press to flip." data-act="flip" data-i="${x.i}"><div class="flip-in">
+    <div class="face front"><div class="meta" style="margin:0 0 6px"><span class="tag">L${x.lvl}</span>${k?'<span class="kdot">✓ Known</span>':""}</div><div class="term">${esc(x.term)}</div><div class="meta"><span>Tap to flip</span></div></div>
+    <div class="face back"><div class="def">${esc(x.def)}</div><div class="meta"><span class="tag">${esc(x.term)}</span><button class="known-btn ${k?"on":""}" data-act="known" data-term="${esc(x.term)}" aria-pressed="${k}">${k?"✓ Known":"Mark as known"}</button></div></div>
+  </div></div>`;
+}
+function setKnown(term, val){
+  S.known[term] = val;
+  if(!val) delete S.known[term];
+  if(val && !S.kx[term]){ S.kx[term] = 1; S.xp += 1; }
+  touchDay(); save();
+}
+
+/* ---------- BRIDGE ---------- */
+function renderBridge(){
+  app.innerHTML = `<h1>Bridge to exam prep</h1>
+  <section class="card stack">
+    <h2 style="margin:0">The NC Life Agent exam at a glance</h2>
+    <ul class="defs">
+      <li>Run by Pearson VUE. In NC you apply on NIPR first, then get an authorization to schedule.</li>
+      <li>55 scored questions, plus up to 5 unscored pretest questions. 1 hour 15 minutes. $45 per attempt.</li>
+      <li>Pass with a scaled score of 70.</li>
+      <li>Prelicense course: optional since Oct 1, 2025.</li>
+    </ul>
+    <p class="aside">The surprise: only about <b>5 of the 55</b> scored questions are in the "Annuities" section. Life insurance products, policy provisions, and NC law make up most of the test. Annuity tax and suitability topics show up in other sections too, but plan your study time around life insurance.</p>
+  </section>
+  <section class="card" style="margin-top:12px">
+    <h2>How this course maps to the official outline</h2>
+    <p class="small muted">From the NC Life Agent content outline in Pearson VUE's NC candidate handbook (outline effective March 15, 2024). Question counts are scored items.</p>
+    <div class="tablewrap"><table class="t"><tr><th>Outline section</th><th>Qs</th><th>What it covers</th><th>Here</th></tr>
+    ${OUTLINE.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${r[1]}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join("")}</table></div>
+  </section>
+  <section class="card" style="margin-top:12px">
+    <h2>What this course doesn't cover (study these next)</h2>
+    <ul class="defs">
+      <li><b>Policy provisions in depth</b>: entire contract, misstatement of age, assignment (absolute vs collateral), reinstatement, nonforfeiture options (cash surrender, reduced paid-up, extended term), dividend options, settlement options.</li>
+      <li><b>Life riders</b>: waiver of premium, accidental death, guaranteed insurability, payor benefit, cost of living.</li>
+      <li><b>Contract law</b>: elements of a valid contract, aleatory, adhesion, unilateral, conditional, representations vs warranties, misrepresentation and concealment.</li>
+      <li><b>Getting a policy issued</b>: the application, premium receipts, delivery, statement of good health.</li>
+      <li><b>Other life topics</b>: group life, credit life, business uses (buy-sell, key person), Social Security survivor benefits, endowments.</li>
+      <li><b>NC law</b>: Commissioner's powers, licensing rules (G.S. 58-33), unfair trade practices (G.S. 58-63), replacement (11 NCAC 12), guaranty association (G.S. 58-62), privacy, CE, viaticals, fraternal benefit societies.</li>
+    </ul>
+  </section>
+  <section class="card" style="margin-top:12px">
+    <h2>A simple plan from here</h2>
+    <ol class="steps">
+      <li>Download the free Pearson VUE NC candidate handbook. The content outline is the real syllabus.</li>
+      <li>Pick one exam prep course. Common providers include ExamFX, Kaplan Financial Education, and XCEL Solutions, and the NC DOI keeps a list of optional providers. Any of them covers the same outline.</li>
+      <li>Work through it in outline order. Do the life insurance sections first, since they're most of the test.</li>
+      <li>Take practice exams until you're scoring 80%+ consistently, then book your seat.</li>
+      <li>After you pass: the one-time 4-hour annuity best-interest course (prep providers often sell it), carrier appointments, and carrier product training.</li>
+    </ol>
+    <p class="small muted">No product endorsement here. Pick whatever format you'll actually finish.</p>
+  </section>`;
+}
+
+/* ---------- ABOUT ---------- */
+function renderAbout(){
+  const totalQ = LEVELS.reduce((a,l)=>a+l.quiz.length,0) + FINAL_EXTRA.length;
+  app.innerHTML = `<h1>About</h1>
+  <section class="card stack">
+    <p>Built for Austin, a product manager at Annuity.com who's getting licensed to sell fixed and indexed annuities in North Carolina. It covers the foundations that most exam prep material assumes you already know.</p>
+    <p>${LEVELS.length} levels, ${LEVELS.reduce((a,l)=>a+l.cards.length,0)} explanation cards, ${totalQ} quiz questions (the Final Boss draws ${FINAL_COUNT} from the pool), and ${GLOSSARY.length} glossary terms.</p>
+    <h3>How progress works</h3>
+    <ul class="defs">
+      <li>Progress, scores, XP, and known terms save in this browser (localStorage). Clearing site data or switching browsers starts fresh.</li>
+      <li>XP: 2 per new card, 10 per correct answer above your previous best on a quiz, 50 for first passing a level, 100 for the Final Boss, 1 per term marked known.</li>
+      <li>Stars: 70% = 1, 85% = 2, 100% = 3. Day streak counts days in a row you've studied.</li>
+    </ul>
+    <div><button class="btn danger" data-act="reset">Reset all progress</button></div>
+  </section>
+  <section class="card" style="margin-top:12px">
+    <h2>Sources</h2>
+    <p class="small muted">Facts checked against these in October 2026. Rules change, so confirm with NC DOI before relying on anything here.</p>
+    <ul class="srcs small">${SOURCES.map(s=>`<li>${esc(s[0])}<br><a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[1])}</a></li>`).join("")}</ul>
+  </section>
+  <section class="card" style="margin-top:12px">
+    <h2>Disclaimer</h2>
+    <p class="small">Educational only. Not legal, tax, or investment advice. Product features such as caps, participation rates, surrender schedules, free-withdrawal amounts, rider fees, and payout amounts vary by contract; numbers here are examples. Verify North Carolina specifics with the NC Department of Insurance and the current Pearson VUE candidate handbook.</p>
+  </section>`;
+}
+
+/* ---------- EVENTS ---------- */
+app.addEventListener("click", e=>{
+  const t = e.target.closest("[data-act]"); if(!t) return;
+  const a = t.dataset.act;
+  switch(a){
+    case "tab": view.tab = t.dataset.tab; if(view.tab==="quiz" && Q && Q.done) Q = null; render(); window.scrollTo(0,0); break;
+    case "next": nextCard(); break;
+    case "prev": prevCard(); break;
+    case "start": case "retry": startQuiz(); render(); window.scrollTo(0,0); break;
+    case "pick": { const q = Q.qs[Q.i]; if(q.result!==null) return; q.picked = +t.dataset.k; answer(q.items[q.picked].ok); break; }
+    case "check": { const q = Q.qs[Q.i]; if(!q.sel.every(Boolean)) return; q.checked = true; answer(q.pairs.every((p,r)=>q.sel[r]===p[1])); break; }
+    case "nextq": if(Q.i < Q.qs.length-1){ Q.i++; } else { finishQuiz(); } render(); scrollToPane(); { const c = $("#qcard .opt, #qcard select, .result .btn"); if(c) c.focus({preventScroll:true}); } break;
+    case "glset": gl[t.dataset.k] = t.dataset.v; if(gl.mode==="drill") newDeck(); renderGlossary(); break;
+    case "glmode": gl.mode = t.dataset.v; if(gl.mode==="drill") newDeck(); renderGlossary(); break;
+    case "flip": { const i = +t.dataset.i; gl.flipped[i] = !gl.flipped[i]; t.classList.toggle("on", gl.flipped[i]); break; }
+    case "known": { e.stopPropagation(); const term = t.dataset.term; setKnown(term, !S.known[term]); fillGlossary(); break; }
+    case "dflip": gl.dflip = !gl.dflip; t.classList.toggle("on", gl.dflip); break;
+    case "dnext": gl.di++; gl.dflip = false; fillGlossary(); break;
+    case "dgot": setKnown(gl.deck[gl.di].term, true); gl.di++; gl.dflip = false; fillGlossary(); break;
+    case "redeck": newDeck(); fillGlossary(); break;
+    case "reset": if(confirm("Reset all progress, scores, XP, and known terms? This can't be undone.")){ localStorage.removeItem(KEY); S = defaults(); Q = null; gl.flipped = {}; gl.deck = []; toast("Progress reset"); location.hash = "#home"; route(); } break;
+  }
+});
+app.addEventListener("change", e=>{
+  const s = e.target.closest("select[data-row]"); if(!s || !Q) return;
+  const q = Q.qs[Q.i]; q.sel[+s.dataset.row] = s.value;
+  const b = app.querySelector('[data-act="check"]'); if(b) b.disabled = !q.sel.every(Boolean);
+});
+app.addEventListener("keydown", e=>{
+  const t = e.target;
+  if((e.key==="Enter" || e.key===" ") && t.classList && t.classList.contains("flip")){ e.preventDefault(); t.click(); }
+});
+document.addEventListener("keydown", e=>{
+  if(view.name!=="level" || view.tab!=="learn") return;
+  if(/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  if(e.key==="ArrowRight") nextCard(); else if(e.key==="ArrowLeft") prevCard();
+});
+window.addEventListener("hashchange", route);
+window.AB = {LEVELS, GLOSSARY, FINAL_EXTRA, get S(){ return S; }, get Q(){ return Q; }};
+route();
+</script>
+</body>
+</html>
